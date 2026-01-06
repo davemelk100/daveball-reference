@@ -1,31 +1,37 @@
 import { Suspense } from "react"
 import { PlayersPageContent } from "@/components/players-page-content"
-import { getLeaders, getPlayer, getDefaultSeason } from "@/lib/mlb-api"
+import { getLeaders, getDefaultSeason } from "@/lib/mlb-api"
 
 export const revalidate = 3600
 
 export default async function PlayersPage() {
   const defaultSeason = getDefaultSeason()
 
-  // Get top players from various categories to feature
-  const [hrLeaders, avgLeaders] = await Promise.all([
-    getLeaders("hitting", "homeRuns", defaultSeason, 8),
-    getLeaders("hitting", "battingAverage", defaultSeason, 8),
+  // Get top players from various categories - leader data already includes player info
+  const [hrLeaders, avgLeaders, rbiLeaders] = await Promise.all([
+    getLeaders("hitting", "homeRuns", defaultSeason, 6),
+    getLeaders("hitting", "battingAverage", defaultSeason, 6),
+    getLeaders("hitting", "runsBattedIn", defaultSeason, 6),
   ])
 
-  // Get unique player IDs
-  const playerIds = new Set<number>()
-  const featuredPlayers: any[] = []
+  // Convert leader data to featured players format without extra API calls
+  const playerMap = new Map<number, any>()
 
-  for (const leader of [...hrLeaders, ...avgLeaders]) {
-    if (!playerIds.has(leader.person.id) && featuredPlayers.length < 12) {
-      playerIds.add(leader.person.id)
-      const playerData = await getPlayer(leader.person.id)
-      if (playerData) {
-        featuredPlayers.push(playerData)
-      }
+  for (const leader of [...hrLeaders, ...avgLeaders, ...rbiLeaders]) {
+    if (!playerMap.has(leader.person.id)) {
+      playerMap.set(leader.person.id, {
+        id: leader.person.id,
+        fullName: leader.person.fullName,
+        firstName: leader.person.firstName || leader.person.fullName.split(" ")[0],
+        lastName: leader.person.lastName || leader.person.fullName.split(" ").slice(1).join(" "),
+        currentTeam: leader.team ? { id: leader.team.id, name: leader.team.name } : undefined,
+        primaryPosition: { abbreviation: leader.person.primaryPosition?.abbreviation || "P" },
+        active: true,
+      })
     }
   }
+
+  const featuredPlayers = Array.from(playerMap.values()).slice(0, 12)
 
   return (
     <Suspense fallback={null}>

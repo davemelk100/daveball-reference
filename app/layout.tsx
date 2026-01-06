@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { PageLoader } from "@/components/page-loader"
 import "./globals.css"
 
@@ -55,9 +56,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans antialiased`}>
+      <body className={`font-sans antialiased min-h-screen flex flex-col`}>
         <Header />
         <Suspense fallback={<PageLoader />}>{children}</Suspense>
+        <Footer />
         <Analytics />
       </body>
     </html>

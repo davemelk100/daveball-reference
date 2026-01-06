@@ -3,17 +3,23 @@
 import { useState } from "react"
 import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
-import { StandingsMini } from "@/components/standings-mini"
 import { LeadersBarChart } from "@/components/leaders-bar-chart"
 import { SeasonSelector } from "@/components/season-selector"
 import { AwardsCard } from "@/components/awards-card"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Activity, Target, Zap, TrendingUp, Loader2 } from "lucide-react"
 import Link from "next/link"
 import useSWR from "swr"
 import { TriviaCard } from "@/components/trivia-card"
+import { DailyFact } from "@/components/daily-fact"
+import { PlayerSpotlight } from "@/components/player-spotlight"
 import type { AwardWinner } from "@/lib/awards-data"
+
+interface LeagueLeader {
+  value: string | number
+  person?: { fullName: string }
+}
 
 interface DashboardData {
   hrLeaders: any[]
@@ -23,6 +29,11 @@ interface DashboardData {
   standings: any[]
   mvpWinners: { al: AwardWinner[]; nl: AwardWinner[] }
   cyYoungWinners: { al: AwardWinner[]; nl: AwardWinner[] }
+  leagueLeaders?: {
+    hr: { al: LeagueLeader; nl: LeagueLeader }
+    avg: { al: LeagueLeader; nl: LeagueLeader }
+    era: { al: LeagueLeader; nl: LeagueLeader }
+  }
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -42,16 +53,22 @@ export function DashboardContent({
   const avgLeaders = data?.avgLeaders || []
   const eraLeaders = data?.eraLeaders || []
   const kLeaders = data?.kLeaders || []
-  const standings = data?.standings || []
   const mvpWinners = data?.mvpWinners || { al: [], nl: [] }
   const cyYoungWinners = data?.cyYoungWinners || { al: [], nl: [] }
-
-  const displayDivisions = standings.slice(0, 2)
+  const leagueLeaders = data?.leagueLeaders
 
   const currentYear = new Date().getFullYear()
   const isCurrentSeason = season === currentYear
   const seasonStatus = isCurrentSeason ? "In Progress" : "Completed"
   const seasonDescription = isCurrentSeason ? "Regular season games" : "Final standings"
+
+  const formatLeaders = (al: LeagueLeader | undefined, nl: LeagueLeader | undefined) => {
+    if (!al && !nl) return undefined
+    return [
+      { league: "AL" as const, value: al?.value || "—", name: al?.person?.fullName || "No data" },
+      { league: "NL" as const, value: nl?.value || "—", name: nl?.person?.fullName || "No data" },
+    ]
+  }
 
   return (
     <main className="container py-8">
@@ -66,44 +83,54 @@ export function DashboardContent({
         </div>
       </div>
 
+      {/* DailyFact and PlayerSpotlight */}
+      <div className="mb-8 grid gap-4 md:grid-cols-2">
+        <DailyFact />
+        <PlayerSpotlight />
+      </div>
+
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Season</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <SeasonSelector season={season} onSeasonChange={setSeason} />
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+        <Card className="py-2 px-3">
+          <CardContent className="p-0">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-base font-semibold">Season</span>
+              <Activity className="h-3 w-3 text-muted-foreground" />
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {seasonStatus} &middot; {seasonDescription}
+            <div className="flex items-center gap-2">
+              <SeasonSelector season={season} onSeasonChange={setSeason} />
+              {isLoading && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+            </div>
+            <p className="text-xs text-muted-foreground truncate">
+              {seasonStatus} · {seasonDescription}
             </p>
           </CardContent>
         </Card>
 
         <StatCard
           title="Home Run Leader"
-          value={isLoading ? "..." : hrLeaders[0]?.value || "—"}
-          description={isLoading ? "Loading..." : hrLeaders[0]?.person?.fullName || "No data"}
+          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.hr?.al, leagueLeaders?.hr?.nl)}
+          value={isLoading ? "..." : undefined}
+          description={isLoading ? "Loading..." : undefined}
           icon={Zap}
         />
         <StatCard
           title="Batting Avg Leader"
-          value={isLoading ? "..." : avgLeaders[0]?.value || "—"}
-          description={isLoading ? "Loading..." : avgLeaders[0]?.person?.fullName || "No data"}
+          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.avg?.al, leagueLeaders?.avg?.nl)}
+          value={isLoading ? "..." : undefined}
+          description={isLoading ? "Loading..." : undefined}
           icon={Target}
         />
         <StatCard
           title="ERA Leader"
-          value={isLoading ? "..." : eraLeaders[0]?.value || "—"}
-          description={isLoading ? "Loading..." : eraLeaders[0]?.person?.fullName || "No data"}
+          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.era?.al, leagueLeaders?.era?.nl)}
+          value={isLoading ? "..." : undefined}
+          description={isLoading ? "Loading..." : undefined}
           icon={TrendingUp}
         />
       </div>
 
+      {/* Award Winners */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Award Winners</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -140,21 +167,6 @@ export function DashboardContent({
           <LeadersTable title="Batting Average" leaders={avgLeaders} statLabel="AVG" />
           <LeadersTable title="ERA" leaders={eraLeaders} statLabel="ERA" />
           <LeadersTable title="Strikeouts" leaders={kLeaders} statLabel="K" />
-        </div>
-      </div>
-
-      {/* Standings Preview */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Standings</h2>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/standings">View All Standings</Link>
-          </Button>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {displayDivisions.map((division: any, idx: number) => (
-            <StandingsMini key={division.division?.id || idx} division={division} />
-          ))}
         </div>
       </div>
     </main>

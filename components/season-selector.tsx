@@ -24,7 +24,7 @@ const seasons = Array.from({ length: maxYear - 1960 + 1 }, (_, i) => maxYear - i
 export function SeasonSelector({ season, onSeasonChange }: SeasonSelectorProps) {
   return (
     <Select value={season.toString()} onValueChange={(val) => onSeasonChange(Number.parseInt(val))}>
-      <SelectTrigger className="w-[140px] text-2xl font-bold border-none shadow-none p-0 h-auto [&_svg]:opacity-100 [&_svg]:size-6 [&_svg]:text-primary">
+      <SelectTrigger className="w-[100px] text-lg font-bold border-none shadow-none p-0 h-auto [&_svg]:opacity-100 [&_svg]:size-5 [&_svg]:text-primary">
         <SelectValue placeholder="Season" />
       </SelectTrigger>
       <SelectContent className="max-h-[300px]">

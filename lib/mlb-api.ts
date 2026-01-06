@@ -2,6 +2,21 @@
 
 const BASE_URL = "https://statsapi.mlb.com/api/v1"
 
+const cache = new Map<string, { data: any; timestamp: number }>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+function getCached<T>(key: string): T | null {
+  const cached = cache.get(key)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data as T
+  }
+  return null
+}
+
+function setCache(key: string, data: any): void {
+  cache.set(key, { data, timestamp: Date.now() })
+}
+
 export interface Player {
   id: number
   fullName: string
@@ -176,10 +191,16 @@ async function safeJsonParse(res: Response | null): Promise<any | null> {
 }
 
 export async function searchPlayers(query: string): Promise<Player[]> {
+  const cacheKey = `search:${query}`
+  const cached = getCached<Player[]>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(`${BASE_URL}/people/search?names=${encodeURIComponent(query)}&sportId=1&limit=10`)
     const data = await safeJsonParse(res)
-    return data?.people || []
+    const result = data?.people || []
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error searching players:", error)
     return []
@@ -187,12 +208,18 @@ export async function searchPlayers(query: string): Promise<Player[]> {
 }
 
 export async function getPlayer(playerId: number): Promise<Player | null> {
+  const cacheKey = `player:${playerId}`
+  const cached = getCached<Player | null>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(
       `${BASE_URL}/people/${playerId}?hydrate=currentTeam,stats(group=[hitting,pitching],type=[yearByYear])`,
     )
     const data = await safeJsonParse(res)
-    return data?.people?.[0] || null
+    const result = data?.people?.[0] || null
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching player:", error)
     return null
@@ -212,11 +239,17 @@ export async function getPlayerStats(playerId: number, season = getDefaultSeason
   }
 }
 
-export async function getTeams(): Promise<Team[]> {
+export async function getTeams(season?: number): Promise<Team[]> {
+  const cacheKey = `teams:${season || "current"}`
+  const cached = getCached<Team[]>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(`${BASE_URL}/teams?sportId=1`)
     const data = await safeJsonParse(res)
-    return data?.teams || []
+    const result = data?.teams || []
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching teams:", error)
     return []
@@ -224,12 +257,18 @@ export async function getTeams(): Promise<Team[]> {
 }
 
 export async function getStandings(season = getDefaultSeason()): Promise<Division[]> {
+  const cacheKey = `standings:${season}`
+  const cached = getCached<Division[]>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(
       `${BASE_URL}/standings?leagueId=103,104&season=${season}&standingsTypes=regularSeason&hydrate=team(division)`,
     )
     const data = await safeJsonParse(res)
-    return data?.records || []
+    const result = data?.records || []
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching standings:", error)
     return []
@@ -242,23 +281,60 @@ export async function getLeaders(
   season = getDefaultSeason(),
   limit = 10,
 ): Promise<any[]> {
+  const cacheKey = `leaders:${statType}:${statCategory}:${season}:${limit}`
+  const cached = getCached<any[]>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(
       `${BASE_URL}/stats/leaders?leaderCategories=${statCategory}&season=${season}&sportId=1&limit=${limit}&statGroup=${statType}`,
     )
     const data = await safeJsonParse(res)
-    return data?.leagueLeaders?.[0]?.leaders || []
+    const result = data?.leagueLeaders?.[0]?.leaders || []
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching leaders:", error)
     return []
   }
 }
 
+export async function getLeadersByLeague(
+  statType: "hitting" | "pitching",
+  statCategory: string,
+  leagueId: 103 | 104, // 103 = AL, 104 = NL
+  season = getDefaultSeason(),
+  limit = 5,
+): Promise<any[]> {
+  const cacheKey = `leaders:${statType}:${statCategory}:${leagueId}:${season}:${limit}`
+  const cached = getCached<any[]>(cacheKey)
+  if (cached) return cached
+
+  try {
+    const res = await fetchWithRetry(
+      `${BASE_URL}/stats/leaders?leaderCategories=${statCategory}&season=${season}&sportId=1&limit=${limit}&statGroup=${statType}&leagueId=${leagueId}`,
+    )
+    const data = await safeJsonParse(res)
+    const result = data?.leagueLeaders?.[0]?.leaders || []
+    setCache(cacheKey, result)
+    return result
+  } catch (error) {
+    console.error("Error fetching leaders by league:", error)
+    return []
+  }
+}
+
 export async function getTeam(teamId: number): Promise<Team | null> {
+  const cacheKey = `team:${teamId}`
+  const cached = getCached<Team | null>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}`)
     const data = await safeJsonParse(res)
-    return data?.teams?.[0] || null
+    const result = data?.teams?.[0] || null
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching team:", error)
     return null
@@ -266,10 +342,16 @@ export async function getTeam(teamId: number): Promise<Team | null> {
 }
 
 export async function getTeamRoster(teamId: number, season = getDefaultSeason()): Promise<Player[]> {
+  const cacheKey = `roster:${teamId}:${season}`
+  const cached = getCached<Player[]>(cacheKey)
+  if (cached) return cached
+
   try {
     const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}/roster?season=${season}`)
     const data = await safeJsonParse(res)
-    return data?.roster?.map((r: any) => r.person) || []
+    const result = data?.roster?.map((r: any) => r.person) || []
+    setCache(cacheKey, result)
+    return result
   } catch (error) {
     console.error("Error fetching roster:", error)
     return []
