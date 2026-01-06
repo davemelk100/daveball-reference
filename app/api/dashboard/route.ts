@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getLeaders, getStandings } from "@/lib/mlb-api"
+import { getMVPWinnersStatic, getCyYoungWinnersStatic } from "@/lib/awards-data"
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -14,12 +15,17 @@ export async function GET(request: NextRequest) {
       getStandings(season),
     ])
 
+    const mvpWinners = getMVPWinnersStatic()
+    const cyYoungWinners = getCyYoungWinnersStatic()
+
     return NextResponse.json({
       hrLeaders,
       avgLeaders,
       eraLeaders,
       kLeaders,
       standings,
+      mvpWinners,
+      cyYoungWinners,
     })
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error)

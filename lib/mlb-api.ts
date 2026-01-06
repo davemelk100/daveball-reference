@@ -114,6 +114,19 @@ export interface TeamHistoricalRecord {
   playoffResult?: string
 }
 
+export interface AwardWinner {
+  id: number
+  playerId: number
+  playerName: string
+  season: number
+  awardName: string
+  team?: {
+    id: number
+    name: string
+  }
+  notes?: string
+}
+
 async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response | null> {
   for (let i = 0; i < retries; i++) {
     try {
@@ -347,6 +360,60 @@ export async function getFranchiseHistory(teamId: number): Promise<{ allTeamIds:
     return { allTeamIds, name: team?.name || "" }
   } catch {
     return { allTeamIds: [teamId], name: "" }
+  }
+}
+
+export async function getAwardWinners(awardId: string, season?: number): Promise<AwardWinner[]> {
+  try {
+    const url = season
+      ? `${BASE_URL}/awards/${awardId}/recipients?season=${season}&sportId=1`
+      : `${BASE_URL}/awards/${awardId}/recipients?sportId=1`
+
+    const res = await fetchWithRetry(url)
+    const data = await safeJsonParse(res)
+
+    return (data?.awards || []).map((award: any) => ({
+      id: award.id,
+      playerId: award.player?.id,
+      playerName: award.player?.nameFirstLast || award.player?.fullName,
+      season: award.season ? Number.parseInt(award.season) : award.date ? new Date(award.date).getFullYear() : 0,
+      awardName: award.name || awardId,
+      team: award.team ? { id: award.team.id, name: award.team.name } : undefined,
+      notes: award.notes,
+    }))
+  } catch (error) {
+    console.error(`Error fetching ${awardId} winners:`, error)
+    return []
+  }
+}
+
+export async function getMVPWinners(season?: number): Promise<{ al: AwardWinner[]; nl: AwardWinner[] }> {
+  try {
+    // MLBMVP = AL MVP, NLMVP = NL MVP
+    const [alMvp, nlMvp] = await Promise.all([getAwardWinners("MLBMVP", season), getAwardWinners("NLMVP", season)])
+
+    return {
+      al: alMvp.sort((a, b) => b.season - a.season),
+      nl: nlMvp.sort((a, b) => b.season - a.season),
+    }
+  } catch (error) {
+    console.error("Error fetching MVP winners:", error)
+    return { al: [], nl: [] }
+  }
+}
+
+export async function getCyYoungWinners(season?: number): Promise<{ al: AwardWinner[]; nl: AwardWinner[] }> {
+  try {
+    // MLBCY = AL Cy Young, NLCY = NL Cy Young
+    const [alCy, nlCy] = await Promise.all([getAwardWinners("MLBCY", season), getAwardWinners("NLCY", season)])
+
+    return {
+      al: alCy.sort((a, b) => b.season - a.season),
+      nl: nlCy.sort((a, b) => b.season - a.season),
+    }
+  } catch (error) {
+    console.error("Error fetching Cy Young winners:", error)
+    return { al: [], nl: [] }
   }
 }
 

@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import { DashboardContent } from "@/components/dashboard-content"
 import { getLeaders, getStandings, getDefaultSeason } from "@/lib/mlb-api"
+import { getMVPWinnersStatic, getCyYoungWinnersStatic } from "@/lib/awards-data"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export const revalidate = 3600
@@ -14,7 +15,10 @@ async function getDashboardData(season: number) {
     getStandings(season),
   ])
 
-  return { hrLeaders, avgLeaders, eraLeaders, kLeaders, standings }
+  const mvpWinners = getMVPWinnersStatic()
+  const cyYoungWinners = getCyYoungWinnersStatic()
+
+  return { hrLeaders, avgLeaders, eraLeaders, kLeaders, standings, mvpWinners, cyYoungWinners }
 }
 
 function DashboardSkeleton() {

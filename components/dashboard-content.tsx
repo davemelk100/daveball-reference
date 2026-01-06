@@ -6,12 +6,14 @@ import { LeadersTable } from "@/components/leaders-table"
 import { StandingsMini } from "@/components/standings-mini"
 import { LeadersBarChart } from "@/components/leaders-bar-chart"
 import { SeasonSelector } from "@/components/season-selector"
+import { AwardsCard } from "@/components/awards-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Activity, Target, Zap, TrendingUp, Loader2 } from "lucide-react"
 import Link from "next/link"
 import useSWR from "swr"
 import { TriviaCard } from "@/components/trivia-card"
+import type { AwardWinner } from "@/lib/awards-data"
 
 interface DashboardData {
   hrLeaders: any[]
@@ -19,6 +21,8 @@ interface DashboardData {
   eraLeaders: any[]
   kLeaders: any[]
   standings: any[]
+  mvpWinners: { al: AwardWinner[]; nl: AwardWinner[] }
+  cyYoungWinners: { al: AwardWinner[]; nl: AwardWinner[] }
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -39,6 +43,8 @@ export function DashboardContent({
   const eraLeaders = data?.eraLeaders || []
   const kLeaders = data?.kLeaders || []
   const standings = data?.standings || []
+  const mvpWinners = data?.mvpWinners || { al: [], nl: [] }
+  const cyYoungWinners = data?.cyYoungWinners || { al: [], nl: [] }
 
   const displayDivisions = standings.slice(0, 2)
 
@@ -96,6 +102,20 @@ export function DashboardContent({
           description={isLoading ? "Loading..." : eraLeaders[0]?.person?.fullName || "No data"}
           icon={TrendingUp}
         />
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Award Winners</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <AwardsCard title="MVP Winners" icon="trophy" alWinners={mvpWinners.al} nlWinners={mvpWinners.nl} limit={5} />
+          <AwardsCard
+            title="Cy Young Winners"
+            icon="award"
+            alWinners={cyYoungWinners.al}
+            nlWinners={cyYoungWinners.nl}
+            limit={5}
+          />
+        </div>
       </div>
 
       {/* Data Visualizations Section */}
