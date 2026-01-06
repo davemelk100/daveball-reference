@@ -263,28 +263,44 @@ export const triviaQuestions: TriviaQuestion[] = [
   },
 ]
 
-export function getTriviaForTimePeriod(): TriviaQuestion {
-  // Get current date and calculate which 12-hour period we're in
+export function getDailyTriviaQuestions(): TriviaQuestion[] {
   const now = new Date()
-  const startOfYear = new Date(now.getFullYear(), 0, 1)
-  const msIntoYear = now.getTime() - startOfYear.getTime()
-  const hoursIntoYear = msIntoYear / (1000 * 60 * 60)
-  const twelvePeriod = Math.floor(hoursIntoYear / 12)
+  // Create a seed based on the current date (changes daily at midnight)
+  const dateSeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate()
 
-  // Use the period to select a question (cycles through all questions)
-  const questionIndex = twelvePeriod % triviaQuestions.length
-  return triviaQuestions[questionIndex]
+  const seededRandom = (seed: number): number => {
+    const x = Math.sin(seed) * 10000
+    return x - Math.floor(x)
+  }
+
+  const totalQuestions = triviaQuestions.length
+  const selectedIndices: number[] = []
+  let seed = dateSeed
+
+  // Select 5 unique random indices
+  while (selectedIndices.length < 5) {
+    seed = (seed * 16807) % 2147483647 // Linear congruential generator
+    const randomValue = seededRandom(seed)
+    const index = Math.floor(randomValue * totalQuestions)
+
+    if (!selectedIndices.includes(index)) {
+      selectedIndices.push(index)
+    }
+  }
+
+  // Return 5 unique questions
+  return selectedIndices.map((i) => triviaQuestions[i])
+}
+
+export function getTodayStorageKey(): string {
+  const now = new Date()
+  return `trivia-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 }
 
 export function getNextTriviaTime(): Date {
   const now = new Date()
-  const hours = now.getHours()
-  const nextPeriod = hours < 12 ? 12 : 24
-  const next = new Date(now)
-  next.setHours(nextPeriod, 0, 0, 0)
-  if (nextPeriod === 24) {
-    next.setDate(next.getDate() + 1)
-    next.setHours(0, 0, 0, 0)
-  }
-  return next
+  const tomorrow = new Date(now)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
+  return tomorrow
 }

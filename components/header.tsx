@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Search, BarChart3, Users, Trophy, Shield } from "lucide-react"
@@ -20,10 +21,14 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="font-mono text-sm font-bold text-primary-foreground">PB</span>
-            </div>
-            <span className="text-lg font-semibold tracking-tight">PyBaseball</span>
+            <Image
+              src="https://www.mlbstatic.com/team-logos/league-on-dark/1.svg"
+              alt="MLB Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="text-lg font-semibold tracking-tight">MLB Stats</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navigation.map((item) => {

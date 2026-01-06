@@ -1,13 +1,14 @@
 import { getTeams } from "@/lib/mlb-api"
-import { TeamCard } from "@/components/team-card"
+import type { Team } from "@/lib/mlb-api"
 
 export const revalidate = 3600
 
 export default async function TeamsPage() {
-  const teams = await getTeams()
+  const currentYear = new Date().getFullYear()
+  const teams = await getTeams(currentYear)
 
   // Group teams by division
-  const divisions: Record<string, typeof teams> = {}
+  const divisions: Record<string, Team[]> = {}
   teams.forEach((team) => {
     const divName = team.division?.name || "Other"
     if (!divisions[divName]) divisions[divName] = []
@@ -27,7 +28,7 @@ export default async function TeamsPage() {
     <main className="container py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">MLB Teams</h1>
-        <p className="text-muted-foreground mt-1">Browse all 30 Major League Baseball teams by division</p>
+        <p className="text-muted-foreground mt-1">Browse all Major League Baseball teams by division</p>
       </div>
 
       <div className="space-y-10">
@@ -43,7 +44,19 @@ export default async function TeamsPage() {
               {divTeams
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((team) => (
-                  <TeamCard key={team.id} team={team} />
+                  <a key={team.id} href={`/teams/${team.id}`} className="block">
+                    <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+                      <img
+                        src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
+                        alt={team.name}
+                        className="h-10 w-10 object-contain"
+                      />
+                      <div>
+                        <p className="font-medium">{team.name}</p>
+                        <p className="text-sm text-muted-foreground">{team.abbreviation}</p>
+                      </div>
+                    </div>
+                  </a>
                 ))}
             </div>
           </section>
