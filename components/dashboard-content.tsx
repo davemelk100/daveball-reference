@@ -134,10 +134,9 @@ export function DashboardContent({
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Award Winners</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          <AwardsCard title="MVP Winners" icon="trophy" alWinners={mvpWinners.al} nlWinners={mvpWinners.nl} limit={5} />
+          <AwardsCard title="MVP Winners" alWinners={mvpWinners.al} nlWinners={mvpWinners.nl} limit={5} />
           <AwardsCard
             title="Cy Young Winners"
-            icon="award"
             alWinners={cyYoungWinners.al}
             nlWinners={cyYoungWinners.nl}
             limit={5}
