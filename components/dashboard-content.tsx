@@ -112,21 +112,18 @@ export function DashboardContent({
           leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.hr?.al, leagueLeaders?.hr?.nl)}
           value={isLoading ? "..." : undefined}
           description={isLoading ? "Loading..." : undefined}
-          icon={Zap}
         />
         <StatCard
           title="Batting Avg Leader"
           leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.avg?.al, leagueLeaders?.avg?.nl)}
           value={isLoading ? "..." : undefined}
           description={isLoading ? "Loading..." : undefined}
-          icon={Target}
         />
         <StatCard
           title="ERA Leader"
           leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.era?.al, leagueLeaders?.era?.nl)}
           value={isLoading ? "..." : undefined}
           description={isLoading ? "Loading..." : undefined}
-          icon={TrendingUp}
         />
       </div>
 
