@@ -6,7 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PageLoader } from "@/components/page-loader"
-import "./globals.css"
+import "@/styles/globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })

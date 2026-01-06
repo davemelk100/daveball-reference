@@ -53,7 +53,7 @@ export function PlayerSearch() {
           }}
           onFocus={() => setIsOpen(true)}
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          className="pl-10 bg-secondary border-border"
+          className="pl-10 bg-white border-border"
         />
         {isLoading && <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin" />}
       </div>
