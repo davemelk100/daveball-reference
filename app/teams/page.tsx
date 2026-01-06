@@ -21,7 +21,7 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((team) => (
                 <a key={team.id} href={`/teams/${team.id}`} className="block">
-                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-[#b7b7b7] transition-colors">
                     <img
                       src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
                       alt={team.name}
