@@ -190,8 +190,25 @@
 }
 
 /* Add custom container with equal horizontal padding */
-@layer components {
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 640px) {
   .container {
-    @apply mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-12;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }
