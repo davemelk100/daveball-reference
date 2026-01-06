@@ -13,11 +13,34 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Major League Numbers",
-  description: "Baseball statistics dashboard with player, team, and standings data",
+  description: "Explore MLB player stats, team rosters, and league standings in real-time.",
   generator: "v0.app",
+  metadataBase: new URL("https://majorleaguenumbers.com"),
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Major League Numbers",
+    description: "Explore MLB player stats, team rosters, and league standings in real-time.",
+    url: "https://majorleaguenumbers.com",
+    siteName: "Major League Numbers",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Major League Numbers - MLB Statistics Dashboard",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Major League Numbers",
+    description: "Explore MLB player stats, team rosters, and league standings in real-time.",
+    images: ["/og-image.png"],
   },
 }
 
