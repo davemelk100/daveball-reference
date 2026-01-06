@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Activity, Target, Zap, TrendingUp, Loader2 } from "lucide-react"
 import Link from "next/link"
 import useSWR from "swr"
+import { TriviaCard } from "@/components/trivia-card"
 
 interface DashboardData {
   hrLeaders: any[]
@@ -64,9 +65,14 @@ export function DashboardContent({
   return (
     <main className="container py-8">
       {/* Hero Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Stats</h1>
-        <p className="text-muted-foreground">Explore MLB statistics, compare players, and track standings</p>
+      <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Stats</h1>
+          <p className="text-muted-foreground">Explore MLB statistics, compare players, and track standings</p>
+        </div>
+        <div className="ml-auto">
+          <TriviaCard />
+        </div>
       </div>
 
       {/* Quick Stats */}
@@ -135,7 +141,7 @@ export function DashboardContent({
       </div>
 
       {/* Standings Preview */}
-      <div>
+      <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Standings</h2>
           <Button variant="ghost" size="sm" asChild>
