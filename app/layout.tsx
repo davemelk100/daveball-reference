@@ -11,7 +11,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "MLB Universe",
+  title: "Major League Numbers",
   description: "Baseball statistics dashboard with player, team, and standings data",
   generator: "v0.app",
   icons: {

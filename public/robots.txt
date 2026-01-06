@@ -1,4 +1,4 @@
-# MLB Universe - robots.txt
+# Major League Numbers - robots.txt
 User-agent: *
 Allow: /
 
@@ -6,4 +6,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://mlb-universe.vercel.app/sitemap.xml
+Sitemap: https://majorleaguenumbers.com/sitemap.xml

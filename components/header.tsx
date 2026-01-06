@@ -37,7 +37,7 @@ export function Header() {
               height={32}
               className="h-8 w-8 dark:hidden block"
             />
-            <span className="text-lg font-semibold tracking-tight">MLB Universe</span>
+            <span className="text-lg font-semibold tracking-tight">Major League Numbers</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navigation.map((item) => {
