@@ -4,7 +4,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Search, BarChart3, Users, Trophy, Shield } from "lucide-react"
+import { BarChart3, Users, Trophy, Shield } from "lucide-react"
+import { HeaderSearch } from "@/components/header-search"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
@@ -51,13 +52,7 @@ export function Header() {
             })}
           </nav>
         </div>
-        <Link
-          href="/players"
-          className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md bg-secondary/50 hover:bg-secondary transition-colors"
-        >
-          <Search className="h-4 w-4" />
-          <span className="hidden sm:inline">Search players...</span>
-        </Link>
+        <HeaderSearch />
       </div>
     </header>
   )
