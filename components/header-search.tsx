@@ -54,7 +54,7 @@ export function HeaderSearch() {
           }}
           onFocus={() => setIsOpen(true)}
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          className="pl-10 pr-10 w-48 sm:w-64 bg-secondary/50 border-border text-sm h-9"
+          className="pl-10 pr-10 w-48 sm:w-64 bg-white border-border text-sm h-9"
         />
         {isLoading && <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin" />}
       </div>
