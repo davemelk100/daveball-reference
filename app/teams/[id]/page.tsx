@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { getTeam, getTeamRoster, getStandings, getTeamHistory } from "@/lib/mlb-api"
+import { getTeam, getTeamRoster, getStandings, getTeamHistory, getDefaultSeason } from "@/lib/mlb-api"
 import { TeamPageContent } from "@/components/team-page-content"
 
 export const revalidate = 3600
@@ -11,13 +11,13 @@ interface TeamPageProps {
 export default async function TeamPage({ params }: TeamPageProps) {
   const { id } = await params
   const teamId = Number.parseInt(id, 10)
-  const currentYear = new Date().getFullYear()
+  const defaultSeason = getDefaultSeason()
 
   const [team, roster, standings, history] = await Promise.all([
     getTeam(teamId),
-    getTeamRoster(teamId, currentYear),
-    getStandings(currentYear),
-    getTeamHistory(teamId, 1960, currentYear),
+    getTeamRoster(teamId, defaultSeason),
+    getStandings(defaultSeason),
+    getTeamHistory(teamId, 1960, defaultSeason),
   ])
 
   if (!team) notFound()

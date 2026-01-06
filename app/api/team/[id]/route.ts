@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getTeam, getTeamRoster, getStandings } from "@/lib/mlb-api"
+import { getTeam, getTeamRoster, getStandings, getDefaultSeason } from "@/lib/mlb-api"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const teamId = Number.parseInt(id, 10)
   const searchParams = request.nextUrl.searchParams
-  const season = searchParams.get("season") || new Date().getFullYear().toString()
+  const season = searchParams.get("season") || getDefaultSeason().toString()
 
   try {
     const [team, roster, standings] = await Promise.all([

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, Loader2, AlertCircle } from "lucide-react"
-import { getTeamLogoUrl } from "@/lib/mlb-api"
+import { getTeamLogoUrl, getDefaultSeason } from "@/lib/mlb-api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RosterTable } from "@/components/roster-table"
 import { HistoricalChart } from "@/components/historical-chart"
@@ -23,8 +23,8 @@ interface TeamPageContentProps {
 }
 
 export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
-  const currentYear = new Date().getFullYear()
-  const [season, setSeason] = useState(currentYear)
+  const defaultSeason = getDefaultSeason()
+  const [season, setSeason] = useState(defaultSeason)
   const [team, setTeam] = useState(initialData?.team || null)
   const [roster, setRoster] = useState(initialData?.roster || [])
   const [teamRecord, setTeamRecord] = useState(initialData?.teamRecord || null)
@@ -33,7 +33,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (season === currentYear) {
+    if (season === defaultSeason) {
       setTeam(initialData?.team || null)
       setRoster(initialData?.roster || [])
       setTeamRecord(initialData?.teamRecord || null)
@@ -62,7 +62,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
     }
 
     fetchData()
-  }, [season, teamId, currentYear, initialData])
+  }, [season, teamId, defaultSeason, initialData])
 
   if (!team) {
     return (

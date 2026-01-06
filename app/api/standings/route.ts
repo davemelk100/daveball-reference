@@ -1,9 +1,9 @@
-import { getStandings } from "@/lib/mlb-api"
+import { getStandings, getDefaultSeason } from "@/lib/mlb-api"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const season = Number.parseInt(searchParams.get("season") || new Date().getFullYear().toString())
+  const season = Number.parseInt(searchParams.get("season") || getDefaultSeason().toString())
 
   try {
     const standings = await getStandings(season)

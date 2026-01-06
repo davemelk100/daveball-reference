@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { DashboardContent } from "@/components/dashboard-content"
-import { getLeaders, getStandings } from "@/lib/mlb-api"
+import { getLeaders, getStandings, getDefaultSeason } from "@/lib/mlb-api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export const revalidate = 3600
@@ -34,12 +34,12 @@ function DashboardSkeleton() {
 }
 
 export default async function DashboardPage() {
-  const currentYear = new Date().getFullYear()
-  const initialData = await getDashboardData(currentYear)
+  const defaultSeason = getDefaultSeason()
+  const initialData = await getDashboardData(defaultSeason)
 
   return (
     <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent initialData={initialData} initialSeason={currentYear} />
+      <DashboardContent initialData={initialData} initialSeason={defaultSeason} />
     </Suspense>
   )
 }

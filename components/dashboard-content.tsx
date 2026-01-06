@@ -5,7 +5,6 @@ import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
 import { StandingsMini } from "@/components/standings-mini"
 import { LeadersBarChart } from "@/components/leaders-bar-chart"
-import { LeaguePieChart } from "@/components/league-pie-chart"
 import { SeasonSelector } from "@/components/season-selector"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -42,19 +41,6 @@ export function DashboardContent({
   const standings = data?.standings || []
 
   const displayDivisions = standings.slice(0, 2)
-
-  // Calculate league totals for pie chart
-  const alDivisions = standings.filter((d: any) => d.division?.name?.includes("American"))
-  const nlDivisions = standings.filter((d: any) => d.division?.name?.includes("National"))
-
-  const alWins = alDivisions.reduce(
-    (sum: number, div: any) => sum + (div.teamRecords?.reduce((s: number, r: any) => s + (r.wins || 0), 0) || 0),
-    0,
-  )
-  const nlWins = nlDivisions.reduce(
-    (sum: number, div: any) => sum + (div.teamRecords?.reduce((s: number, r: any) => s + (r.wins || 0), 0) || 0),
-    0,
-  )
 
   const currentYear = new Date().getFullYear()
   const isCurrentSeason = season === currentYear
@@ -115,10 +101,9 @@ export function DashboardContent({
       {/* Data Visualizations Section */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Data Visualizations</h2>
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-2">
           <LeadersBarChart title="Home Run Leaders" leaders={hrLeaders} color="#ef4444" />
           <LeadersBarChart title="Strikeout Leaders (Pitching)" leaders={kLeaders} color="#3b82f6" />
-          <LeaguePieChart alWins={alWins} nlWins={nlWins} />
         </div>
       </div>
 

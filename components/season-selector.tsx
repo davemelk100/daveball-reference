@@ -7,8 +7,19 @@ interface SeasonSelectorProps {
   onSeasonChange: (season: number) => void
 }
 
-const currentYear = new Date().getFullYear()
-const seasons = Array.from({ length: currentYear - 1960 + 1 }, (_, i) => currentYear - i)
+const getMaxYear = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth()
+  // Use 2025 until April 2026
+  if (year < 2026 || (year === 2026 && month < 3)) {
+    return 2025
+  }
+  return year
+}
+
+const maxYear = getMaxYear()
+const seasons = Array.from({ length: maxYear - 1960 + 1 }, (_, i) => maxYear - i)
 
 export function SeasonSelector({ season, onSeasonChange }: SeasonSelectorProps) {
   return (

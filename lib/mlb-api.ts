@@ -114,12 +114,59 @@ export interface TeamHistoricalRecord {
   playoffResult?: string
 }
 
+async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response | null> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url)
+
+      // Check for rate limiting
+      if (res.status === 429) {
+        if (i < retries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)))
+          continue
+        }
+        console.error("Rate limited by MLB API after retries")
+        return null
+      }
+
+      if (!res.ok) {
+        console.error(`API error: ${res.status} ${res.statusText}`)
+        return null
+      }
+
+      return res
+    } catch (error) {
+      if (i < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)))
+        continue
+      }
+      console.error("Network error:", error)
+      return null
+    }
+  }
+  return null
+}
+
+async function safeJsonParse(res: Response | null): Promise<any | null> {
+  if (!res) return null
+  try {
+    const text = await res.text()
+    if (text.startsWith("Too Many")) {
+      console.error("Rate limited by MLB API")
+      return null
+    }
+    return JSON.parse(text)
+  } catch (error) {
+    console.error("Error parsing JSON:", error)
+    return null
+  }
+}
+
 export async function searchPlayers(query: string): Promise<Player[]> {
   try {
-    const res = await fetch(`${BASE_URL}/people/search?names=${encodeURIComponent(query)}&sportId=1&limit=10`)
-    if (!res.ok) throw new Error("Failed to search players")
-    const data = await res.json()
-    return data.people || []
+    const res = await fetchWithRetry(`${BASE_URL}/people/search?names=${encodeURIComponent(query)}&sportId=1&limit=10`)
+    const data = await safeJsonParse(res)
+    return data?.people || []
   } catch (error) {
     console.error("Error searching players:", error)
     return []
@@ -128,24 +175,24 @@ export async function searchPlayers(query: string): Promise<Player[]> {
 
 export async function getPlayer(playerId: number): Promise<Player | null> {
   try {
-    const res = await fetch(
+    const res = await fetchWithRetry(
       `${BASE_URL}/people/${playerId}?hydrate=currentTeam,stats(group=[hitting,pitching],type=[yearByYear])`,
     )
-    if (!res.ok) throw new Error("Failed to fetch player")
-    const data = await res.json()
-    return data.people?.[0] || null
+    const data = await safeJsonParse(res)
+    return data?.people?.[0] || null
   } catch (error) {
     console.error("Error fetching player:", error)
     return null
   }
 }
 
-export async function getPlayerStats(playerId: number, season = 2024): Promise<PlayerStats[]> {
+export async function getPlayerStats(playerId: number, season = getDefaultSeason()): Promise<PlayerStats[]> {
   try {
-    const res = await fetch(`${BASE_URL}/people/${playerId}/stats?stats=season&season=${season}&group=hitting,pitching`)
-    if (!res.ok) throw new Error("Failed to fetch player stats")
-    const data = await res.json()
-    return data.stats?.[0]?.splits || []
+    const res = await fetchWithRetry(
+      `${BASE_URL}/people/${playerId}/stats?stats=season&season=${season}&group=hitting,pitching`,
+    )
+    const data = await safeJsonParse(res)
+    return data?.stats?.[0]?.splits || []
   } catch (error) {
     console.error("Error fetching player stats:", error)
     return []
@@ -154,24 +201,22 @@ export async function getPlayerStats(playerId: number, season = 2024): Promise<P
 
 export async function getTeams(): Promise<Team[]> {
   try {
-    const res = await fetch(`${BASE_URL}/teams?sportId=1`)
-    if (!res.ok) throw new Error("Failed to fetch teams")
-    const data = await res.json()
-    return data.teams || []
+    const res = await fetchWithRetry(`${BASE_URL}/teams?sportId=1`)
+    const data = await safeJsonParse(res)
+    return data?.teams || []
   } catch (error) {
     console.error("Error fetching teams:", error)
     return []
   }
 }
 
-export async function getStandings(season = 2024): Promise<Division[]> {
+export async function getStandings(season = getDefaultSeason()): Promise<Division[]> {
   try {
-    const res = await fetch(
+    const res = await fetchWithRetry(
       `${BASE_URL}/standings?leagueId=103,104&season=${season}&standingsTypes=regularSeason&hydrate=team(division)`,
     )
-    if (!res.ok) throw new Error("Failed to fetch standings")
-    const data = await res.json()
-    return data.records || []
+    const data = await safeJsonParse(res)
+    return data?.records || []
   } catch (error) {
     console.error("Error fetching standings:", error)
     return []
@@ -181,16 +226,15 @@ export async function getStandings(season = 2024): Promise<Division[]> {
 export async function getLeaders(
   statType: "hitting" | "pitching",
   statCategory: string,
-  season = 2024,
+  season = getDefaultSeason(),
   limit = 10,
 ): Promise<any[]> {
   try {
-    const res = await fetch(
+    const res = await fetchWithRetry(
       `${BASE_URL}/stats/leaders?leaderCategories=${statCategory}&season=${season}&sportId=1&limit=${limit}&statGroup=${statType}`,
     )
-    if (!res.ok) throw new Error("Failed to fetch leaders")
-    const data = await res.json()
-    return data.leagueLeaders?.[0]?.leaders || []
+    const data = await safeJsonParse(res)
+    return data?.leagueLeaders?.[0]?.leaders || []
   } catch (error) {
     console.error("Error fetching leaders:", error)
     return []
@@ -199,34 +243,33 @@ export async function getLeaders(
 
 export async function getTeam(teamId: number): Promise<Team | null> {
   try {
-    const res = await fetch(`${BASE_URL}/teams/${teamId}`)
-    if (!res.ok) throw new Error("Failed to fetch team")
-    const data = await res.json()
-    return data.teams?.[0] || null
+    const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}`)
+    const data = await safeJsonParse(res)
+    return data?.teams?.[0] || null
   } catch (error) {
     console.error("Error fetching team:", error)
     return null
   }
 }
 
-export async function getTeamRoster(teamId: number, season = 2024): Promise<Player[]> {
+export async function getTeamRoster(teamId: number, season = getDefaultSeason()): Promise<Player[]> {
   try {
-    const res = await fetch(`${BASE_URL}/teams/${teamId}/roster?season=${season}`)
-    if (!res.ok) throw new Error("Failed to fetch roster")
-    const data = await res.json()
-    return data.roster?.map((r: any) => r.person) || []
+    const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}/roster?season=${season}`)
+    const data = await safeJsonParse(res)
+    return data?.roster?.map((r: any) => r.person) || []
   } catch (error) {
     console.error("Error fetching roster:", error)
     return []
   }
 }
 
-export async function getTeamStats(teamId: number, season = 2024): Promise<any> {
+export async function getTeamStats(teamId: number, season = getDefaultSeason()): Promise<any> {
   try {
-    const res = await fetch(`${BASE_URL}/teams/${teamId}/stats?stats=season&season=${season}&group=hitting,pitching`)
-    if (!res.ok) throw new Error("Failed to fetch team stats")
-    const data = await res.json()
-    return data.stats || []
+    const res = await fetchWithRetry(
+      `${BASE_URL}/teams/${teamId}/stats?stats=season&season=${season}&group=hitting,pitching`,
+    )
+    const data = await safeJsonParse(res)
+    return data?.stats || []
   } catch (error) {
     console.error("Error fetching team stats:", error)
     return []
@@ -236,24 +279,30 @@ export async function getTeamStats(teamId: number, season = 2024): Promise<any> 
 export async function getTeamHistory(
   teamId: number,
   startYear = 1960,
-  endYear = 2024,
+  endYear = getDefaultSeason(),
 ): Promise<TeamHistoricalRecord[]> {
   const records: TeamHistoricalRecord[] = []
 
   // Fetch in batches to avoid too many concurrent requests
   const years = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i)
 
-  // Process in chunks of 5 years at a time
-  for (let i = 0; i < years.length; i += 5) {
-    const chunk = years.slice(i, i + 5)
+  // Process in chunks of 3 years at a time with delay between chunks
+  for (let i = 0; i < years.length; i += 3) {
+    const chunk = years.slice(i, i + 3)
+
+    // Add delay between batches to avoid rate limiting
+    if (i > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+
     const results = await Promise.all(
       chunk.map(async (year) => {
         try {
-          const res = await fetch(
+          const res = await fetchWithRetry(
             `${BASE_URL}/standings?leagueId=103,104&season=${year}&standingsTypes=regularSeason&hydrate=team`,
           )
-          if (!res.ok) return null
-          const data = await res.json()
+          const data = await safeJsonParse(res)
+          if (!data) return null
 
           for (const division of data.records || []) {
             const teamRecord = division.teamRecords?.find((r: any) => r.team.id === teamId)
@@ -285,10 +334,9 @@ export async function getTeamHistory(
 
 export async function getFranchiseHistory(teamId: number): Promise<{ allTeamIds: number[]; name: string }> {
   try {
-    const res = await fetch(`${BASE_URL}/teams/${teamId}?hydrate=previousScheduledTeams`)
-    if (!res.ok) throw new Error("Failed to fetch franchise history")
-    const data = await res.json()
-    const team = data.teams?.[0]
+    const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}?hydrate=previousScheduledTeams`)
+    const data = await safeJsonParse(res)
+    const team = data?.teams?.[0]
 
     // Collect all historical team IDs for this franchise
     const allTeamIds = [teamId]
@@ -316,4 +364,17 @@ export function getPlayerHeadshotUrl(playerId: number, size: "small" | "medium" 
 export function getTeamLogoUrl(teamId: number, size: "small" | "medium" | "large" = "medium"): string {
   // MLB static team logos - uses SVG which scales well
   return `https://www.mlbstatic.com/team-logos/${teamId}.svg`
+}
+
+// Helper function to get the default season (2025 until April 2026)
+export function getDefaultSeason(): number {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth() // 0-indexed, so March = 2, April = 3
+
+  // Use 2025 until April 2026, then use current year
+  if (year < 2026 || (year === 2026 && month < 3)) {
+    return 2025
+  }
+  return year
 }

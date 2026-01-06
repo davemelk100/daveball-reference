@@ -1,11 +1,11 @@
-import { getTeams } from "@/lib/mlb-api"
+import { getTeams, getDefaultSeason } from "@/lib/mlb-api"
 import type { Team } from "@/lib/mlb-api"
 
 export const revalidate = 3600
 
 export default async function TeamsPage() {
-  const currentYear = new Date().getFullYear()
-  const teams = await getTeams(currentYear)
+  const defaultSeason = getDefaultSeason()
+  const teams = await getTeams(defaultSeason)
 
   // Group teams by division
   const divisions: Record<string, Team[]> = {}
