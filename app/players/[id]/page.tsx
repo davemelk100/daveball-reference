@@ -51,7 +51,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
             alt={player.fullName}
             fill
             className="object-cover"
-            unoptimized
+            priority
           />
         </div>
         <div className="flex-1">

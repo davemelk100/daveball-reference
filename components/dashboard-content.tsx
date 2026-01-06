@@ -1,20 +1,39 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense, lazy } from "react"
+import dynamic from "next/dynamic"
 import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
-import { LeadersBarChart } from "@/components/leaders-bar-chart"
 import { SeasonSelector } from "@/components/season-selector"
-import { AwardsCard } from "@/components/awards-card"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Activity, Target, Zap, TrendingUp, Loader2 } from "lucide-react"
+import { Activity, Loader2 } from "lucide-react"
 import Link from "next/link"
 import useSWR from "swr"
-import { TriviaCard } from "@/components/trivia-card"
-import { DailyFact } from "@/components/daily-fact"
-import { PlayerSpotlight } from "@/components/player-spotlight"
 import type { AwardWinner } from "@/lib/awards-data"
+import { Skeleton } from "@/components/ui/skeleton"
+
+// Lazy load heavy components
+const LeadersBarChart = dynamic(() => import("@/components/leaders-bar-chart").then(mod => ({ default: mod.LeadersBarChart })), {
+  loading: () => <Skeleton className="h-[300px] w-full" />,
+  ssr: false,
+})
+
+const AwardsCard = dynamic(() => import("@/components/awards-card").then(mod => ({ default: mod.AwardsCard })), {
+  loading: () => <Skeleton className="h-[200px] w-full" />,
+})
+
+const TriviaCard = dynamic(() => import("@/components/trivia-card").then(mod => ({ default: mod.TriviaCard })), {
+  loading: () => <Skeleton className="h-[100px] w-full" />,
+})
+
+const DailyFact = dynamic(() => import("@/components/daily-fact").then(mod => ({ default: mod.DailyFact })), {
+  loading: () => <Skeleton className="h-[80px] w-full" />,
+})
+
+const PlayerSpotlight = dynamic(() => import("@/components/player-spotlight").then(mod => ({ default: mod.PlayerSpotlight })), {
+  loading: () => <Skeleton className="h-[80px] w-full" />,
+})
 
 interface LeagueLeader {
   value: string | number

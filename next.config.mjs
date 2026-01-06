@@ -4,7 +4,20 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.mlbstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.mlbstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.mlbstatic.com",
+      },
+    ],
   },
  
 }

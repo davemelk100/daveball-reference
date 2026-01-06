@@ -138,7 +138,6 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
             alt={`${team.name} logo`}
             fill
             className="object-contain"
-            unoptimized
           />
         </div>
         <div className="flex-1">

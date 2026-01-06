@@ -2,19 +2,21 @@
 
 const BASE_URL = "https://statsapi.mlb.com/api/v1"
 
-const cache = new Map<string, { data: any; timestamp: number }>()
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+const cache = new Map<string, { data: any; timestamp: number; ttl: number }>()
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes default
+const CACHE_TTL_LONG = 24 * 60 * 60 * 1000 // 24 hours for static data
+const CACHE_TTL_HISTORY = 7 * 24 * 60 * 60 * 1000 // 7 days for historical data
 
 function getCached<T>(key: string): T | null {
   const cached = cache.get(key)
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+  if (cached && Date.now() - cached.timestamp < cached.ttl) {
     return cached.data as T
   }
   return null
 }
 
-function setCache(key: string, data: any): void {
-  cache.set(key, { data, timestamp: Date.now() })
+function setCache(key: string, data: any, ttl: number = CACHE_TTL): void {
+  cache.set(key, { data, timestamp: Date.now(), ttl })
 }
 
 export interface Player {
@@ -376,55 +378,72 @@ export async function getTeamHistory(
   startYear = 1960,
   endYear = getDefaultSeason(),
 ): Promise<TeamHistoricalRecord[]> {
-  const records: TeamHistoricalRecord[] = []
+  const cacheKey = `team-history-${teamId}-${startYear}-${endYear}`
+  const cached = getCached<TeamHistoricalRecord[]>(cacheKey)
+  if (cached) return cached
 
-  // Fetch in batches to avoid too many concurrent requests
+  const records: TeamHistoricalRecord[] = []
   const years = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i)
 
-  // Process in chunks of 3 years at a time with delay between chunks
-  for (let i = 0; i < years.length; i += 3) {
-    const chunk = years.slice(i, i + 3)
+  // Process in larger chunks (5 years) with shorter delay for faster loading
+  for (let i = 0; i < years.length; i += 5) {
+    const chunk = years.slice(i, i + 5)
 
-    // Add delay between batches to avoid rate limiting
+    // Shorter delay between batches
     if (i > 0) {
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 200))
     }
 
     const results = await Promise.all(
       chunk.map(async (year) => {
-        try {
-          const res = await fetchWithRetry(
-            `${BASE_URL}/standings?leagueId=103,104&season=${year}&standingsTypes=regularSeason&hydrate=team`,
-          )
-          const data = await safeJsonParse(res)
-          if (!data) return null
+        // Check if we have this year cached individually
+        const yearCacheKey = `standings-${year}`
+        let data = getCached<any>(yearCacheKey)
 
-          for (const division of data.records || []) {
-            const teamRecord = division.teamRecords?.find((r: any) => r.team.id === teamId)
-            if (teamRecord) {
-              return {
-                season: year,
-                wins: teamRecord.wins || 0,
-                losses: teamRecord.losses || 0,
-                winningPercentage: teamRecord.winningPercentage || ".000",
-                runsScored: teamRecord.runsScored || 0,
-                runsAllowed: teamRecord.runsAllowed || 0,
-                runDifferential: teamRecord.runDifferential || 0,
-                divisionRank: teamRecord.divisionRank,
-                leagueRank: teamRecord.leagueRank,
-              } as TeamHistoricalRecord
+        if (!data) {
+          try {
+            const res = await fetchWithRetry(
+              `${BASE_URL}/standings?leagueId=103,104&season=${year}&standingsTypes=regularSeason&hydrate=team`,
+            )
+            data = await safeJsonParse(res)
+            if (data) {
+              // Cache historical years for longer (they don't change)
+              const ttl = year < new Date().getFullYear() ? CACHE_TTL_HISTORY : CACHE_TTL
+              setCache(yearCacheKey, data, ttl)
             }
+          } catch {
+            return null
           }
-          return null
-        } catch {
-          return null
         }
+
+        if (!data) return null
+
+        for (const division of data.records || []) {
+          const teamRecord = division.teamRecords?.find((r: any) => r.team.id === teamId)
+          if (teamRecord) {
+            return {
+              season: year,
+              wins: teamRecord.wins || 0,
+              losses: teamRecord.losses || 0,
+              winningPercentage: teamRecord.winningPercentage || ".000",
+              runsScored: teamRecord.runsScored || 0,
+              runsAllowed: teamRecord.runsAllowed || 0,
+              runDifferential: teamRecord.runDifferential || 0,
+              divisionRank: teamRecord.divisionRank,
+              leagueRank: teamRecord.leagueRank,
+            } as TeamHistoricalRecord
+          }
+        }
+        return null
       }),
     )
     records.push(...results.filter((r): r is TeamHistoricalRecord => r !== null))
   }
 
-  return records.sort((a, b) => b.season - a.season)
+  const sorted = records.sort((a, b) => b.season - a.season)
+  // Cache full team history for 7 days
+  setCache(cacheKey, sorted, CACHE_TTL_HISTORY)
+  return sorted
 }
 
 export async function getFranchiseHistory(teamId: number): Promise<{ allTeamIds: number[]; name: string }> {

@@ -39,7 +39,6 @@ export function RosterTable({ players, title }: RosterTableProps) {
                         alt={player.fullName}
                         fill
                         className="object-cover"
-                        unoptimized
                       />
                     </div>
                     <span className="font-medium">{player.fullName}</span>

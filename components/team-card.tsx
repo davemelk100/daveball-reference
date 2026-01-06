@@ -18,7 +18,6 @@ export function TeamCard({ team }: TeamCardProps) {
               alt={`${team.name} logo`}
               fill
               className="object-contain"
-              unoptimized
             />
           </div>
           <div className="flex-1 min-w-0">
