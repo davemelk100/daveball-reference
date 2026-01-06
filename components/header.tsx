@@ -23,24 +23,16 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-[116px] items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/">
             <Image
-              src="https://www.mlbstatic.com/team-logos/league-on-dark/1.svg"
-              alt="MLB Logo"
-              width={32}
-              height={32}
-              className="h-8 w-8 dark:block hidden"
+              src="/mln-logo.png"
+              alt="Major League Numbers Logo"
+              width={161}
+              height={100}
+              className="h-[100px] w-auto"
             />
-            <Image
-              src="https://www.mlbstatic.com/team-logos/league-on-light/1.svg"
-              alt="MLB Logo"
-              width={32}
-              height={32}
-              className="h-8 w-8 dark:hidden block"
-            />
-            <span className="text-lg font-semibold tracking-tight hidden md:inline">Major League Numbers</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navigation.map((item) => {
