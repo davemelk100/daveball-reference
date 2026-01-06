@@ -1,4 +1,3 @@
-import { Header } from "@/components/header"
 import { StandingsTable } from "@/components/standings-table"
 import { getStandings } from "@/lib/mlb-api"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -26,51 +25,48 @@ export default async function StandingsPage() {
   const sortedNL = sortDivisions(nlDivisions)
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Standings</h1>
-          <p className="text-muted-foreground">2024 Regular Season standings by division</p>
-        </div>
+    <main className="container py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Standings</h1>
+        <p className="text-muted-foreground">2024 Regular Season standings by division</p>
+      </div>
 
-        <Tabs defaultValue="al" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="al">American League</TabsTrigger>
-            <TabsTrigger value="nl">National League</TabsTrigger>
-            <TabsTrigger value="all">All Divisions</TabsTrigger>
-          </TabsList>
+      <Tabs defaultValue="al" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="al">American League</TabsTrigger>
+          <TabsTrigger value="nl">National League</TabsTrigger>
+          <TabsTrigger value="all">All Divisions</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="al" className="space-y-6">
-            {sortedAL.map((division, idx) => (
-              <StandingsTable key={division.division?.id || idx} division={division} />
-            ))}
-          </TabsContent>
+        <TabsContent value="al" className="space-y-6">
+          {sortedAL.map((division, idx) => (
+            <StandingsTable key={division.division?.id || idx} division={division} />
+          ))}
+        </TabsContent>
 
-          <TabsContent value="nl" className="space-y-6">
-            {sortedNL.map((division, idx) => (
-              <StandingsTable key={division.division?.id || idx} division={division} />
-            ))}
-          </TabsContent>
+        <TabsContent value="nl" className="space-y-6">
+          {sortedNL.map((division, idx) => (
+            <StandingsTable key={division.division?.id || idx} division={division} />
+          ))}
+        </TabsContent>
 
-          <TabsContent value="all" className="space-y-6">
-            <div className="grid gap-6 xl:grid-cols-2">
-              <div className="space-y-6">
-                <h2 className="text-xl font-semibold">American League</h2>
-                {sortedAL.map((division, idx) => (
-                  <StandingsTable key={division.division?.id || idx} division={division} />
-                ))}
-              </div>
-              <div className="space-y-6">
-                <h2 className="text-xl font-semibold">National League</h2>
-                {sortedNL.map((division, idx) => (
-                  <StandingsTable key={division.division?.id || idx} division={division} />
-                ))}
-              </div>
+        <TabsContent value="all" className="space-y-6">
+          <div className="grid gap-6 xl:grid-cols-2">
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold">American League</h2>
+              {sortedAL.map((division, idx) => (
+                <StandingsTable key={division.division?.id || idx} division={division} />
+              ))}
             </div>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold">National League</h2>
+              {sortedNL.map((division, idx) => (
+                <StandingsTable key={division.division?.id || idx} division={division} />
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </main>
   )
 }

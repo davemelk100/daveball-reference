@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import { Header } from "@/components/header"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerCard } from "@/components/player-card"
 import { getLeaders, getPlayer } from "@/lib/mlb-api"
@@ -28,26 +27,23 @@ export default async function PlayersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Player Search</h1>
-          <p className="text-muted-foreground mb-6">Search for any MLB player to view their stats and profile</p>
-          <Suspense fallback={<div className="h-10 bg-secondary rounded-md animate-pulse max-w-xl" />}>
-            <PlayerSearch />
-          </Suspense>
-        </div>
+    <main className="container py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Player Search</h1>
+        <p className="text-muted-foreground mb-6">Search for any MLB player to view their stats and profile</p>
+        <Suspense fallback={<div className="h-10 bg-secondary rounded-md animate-pulse max-w-xl" />}>
+          <PlayerSearch />
+        </Suspense>
+      </div>
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Featured Players</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {featuredPlayers.map((player) => (
-              <PlayerCard key={player.id} player={player} />
-            ))}
-          </div>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Featured Players</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {featuredPlayers.map((player) => (
+            <PlayerCard key={player.id} player={player} />
+          ))}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   )
 }

@@ -1,15 +1,13 @@
 import { Suspense } from "react"
 import { CompareContent } from "@/components/compare-content"
-import { Header } from "@/components/header"
 
 export default function ComparePage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <>
       <Suspense fallback={<CompareLoading />}>
         <CompareContent />
       </Suspense>
-    </div>
+    </>
   )
 }
 
