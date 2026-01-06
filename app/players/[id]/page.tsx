@@ -4,9 +4,10 @@ import { StatCard } from "@/components/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getPlayer } from "@/lib/mlb-api"
+import { getPlayer, getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowLeft, Calendar, MapPin, Ruler, Scale, Plus } from "lucide-react"
 
 interface PlayerPageProps {
@@ -47,8 +48,14 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
 
         {/* Player Header */}
         <div className="flex flex-col md:flex-row gap-6 mb-8">
-          <div className="flex h-24 w-24 md:h-32 md:w-32 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-4xl md:text-5xl shrink-0">
-            {player.primaryNumber || "#"}
+          <div className="relative h-24 w-24 md:h-32 md:w-32 rounded-full overflow-hidden bg-muted shrink-0">
+            <Image
+              src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
+              alt={player.fullName}
+              fill
+              className="object-cover"
+              unoptimized
+            />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">

@@ -124,3 +124,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Add custom container with equal horizontal padding */
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-12;
+  }
+}

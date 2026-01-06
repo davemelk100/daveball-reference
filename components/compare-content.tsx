@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 import { PlayerSelector } from "@/components/player-selector"
 import { ComparisonChart } from "@/components/comparison-chart"
 import { StatComparisonRow } from "@/components/stat-comparison-row"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getPlayer, type Player } from "@/lib/mlb-api"
+import { getPlayer, getPlayerHeadshotUrl, type Player } from "@/lib/mlb-api"
 import { Loader2 } from "lucide-react"
 
 export function CompareContent() {
@@ -164,9 +165,31 @@ export function CompareContent() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4 pb-3 border-b border-border mb-2">
-                    <div className="text-right font-semibold text-primary">{player1Full.fullName}</div>
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="font-semibold text-primary">{player1Full.fullName}</span>
+                      <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
+                        <Image
+                          src={getPlayerHeadshotUrl(player1Full.id, "small") || "/placeholder.svg"}
+                          alt={player1Full.fullName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    </div>
                     <div className="text-center text-sm text-muted-foreground">Stat</div>
-                    <div className="text-left font-semibold text-blue-500">{player2Full.fullName}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
+                        <Image
+                          src={getPlayerHeadshotUrl(player2Full.id, "small") || "/placeholder.svg"}
+                          alt={player2Full.fullName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                      <span className="font-semibold text-blue-500">{player2Full.fullName}</span>
+                    </div>
                   </div>
                   <StatComparisonRow
                     label="G"
@@ -211,9 +234,31 @@ export function CompareContent() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4 pb-3 border-b border-border mb-2">
-                    <div className="text-right font-semibold text-primary">{player1Full.fullName}</div>
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="font-semibold text-primary">{player1Full.fullName}</span>
+                      <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
+                        <Image
+                          src={getPlayerHeadshotUrl(player1Full.id, "small") || "/placeholder.svg"}
+                          alt={player1Full.fullName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    </div>
                     <div className="text-center text-sm text-muted-foreground">Stat</div>
-                    <div className="text-left font-semibold text-blue-500">{player2Full.fullName}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
+                        <Image
+                          src={getPlayerHeadshotUrl(player2Full.id, "small") || "/placeholder.svg"}
+                          alt={player2Full.fullName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                      <span className="font-semibold text-blue-500">{player2Full.fullName}</span>
+                    </div>
                   </div>
                   <StatComparisonRow label="W" value1={p1Stats.pitching?.wins} value2={p2Stats.pitching?.wins} />
                   <StatComparisonRow

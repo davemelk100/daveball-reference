@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Image from "next/image"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Search, Loader2, X } from "lucide-react"
-import { searchPlayers, type Player } from "@/lib/mlb-api"
+import { searchPlayers, getPlayerHeadshotUrl, type Player } from "@/lib/mlb-api"
 import { cn } from "@/lib/utils"
 
 interface PlayerSelectorProps {
@@ -52,8 +53,14 @@ export function PlayerSelector({ selectedPlayer, onSelect, label }: PlayerSelect
         <CardContent className="p-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary font-bold shrink-0">
-                {selectedPlayer.primaryNumber || "#"}
+              <div className="relative h-12 w-12 rounded-full overflow-hidden bg-muted shrink-0">
+                <Image
+                  src={getPlayerHeadshotUrl(selectedPlayer.id, "small") || "/placeholder.svg"}
+                  alt={selectedPlayer.fullName}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
               </div>
               <div className="min-w-0">
                 <p className="font-semibold truncate">{selectedPlayer.fullName}</p>
@@ -109,8 +116,14 @@ export function PlayerSelector({ selectedPlayer, onSelect, label }: PlayerSelect
                   "flex items-center gap-3 p-2 rounded-md hover:bg-secondary transition-colors w-full text-left",
                 )}
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-xs">
-                  {player.primaryNumber || "#"}
+                <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
+                  <Image
+                    src={getPlayerHeadshotUrl(player.id, "small") || "/placeholder.svg"}
+                    alt={player.fullName}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm truncate">{player.fullName}</p>
