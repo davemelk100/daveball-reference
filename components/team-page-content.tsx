@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2, AlertCircle } from "lucide-react"
 import { getTeamLogoUrl } from "@/lib/mlb-api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RosterTable } from "@/components/roster-table"
@@ -25,30 +25,37 @@ interface TeamPageContentProps {
 export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
   const currentYear = new Date().getFullYear()
   const [season, setSeason] = useState(currentYear)
-  const [team, setTeam] = useState(initialData.team)
-  const [roster, setRoster] = useState(initialData.roster)
-  const [teamRecord, setTeamRecord] = useState(initialData.teamRecord)
-  const [history] = useState(initialData.history)
+  const [team, setTeam] = useState(initialData?.team || null)
+  const [roster, setRoster] = useState(initialData?.roster || [])
+  const [teamRecord, setTeamRecord] = useState(initialData?.teamRecord || null)
+  const [history] = useState(initialData?.history || [])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (season === currentYear) {
-      setTeam(initialData.team)
-      setRoster(initialData.roster)
-      setTeamRecord(initialData.teamRecord)
+      setTeam(initialData?.team || null)
+      setRoster(initialData?.roster || [])
+      setTeamRecord(initialData?.teamRecord || null)
+      setError(null)
       return
     }
 
     const fetchData = async () => {
       setLoading(true)
+      setError(null)
       try {
         const res = await fetch(`/api/team/${teamId}?season=${season}`)
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`)
+        }
         const data = await res.json()
-        setTeam(data.team)
-        setRoster(data.roster)
-        setTeamRecord(data.teamRecord)
-      } catch (error) {
-        console.error("Error fetching team data:", error)
+        setTeam(data.team || null)
+        setRoster(data.roster || [])
+        setTeamRecord(data.teamRecord || null)
+      } catch (err) {
+        console.error("Error fetching team data:", err)
+        setError("Failed to load team data. Please try again.")
       } finally {
         setLoading(false)
       }
@@ -57,7 +64,28 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
     fetchData()
   }, [season, teamId, currentYear, initialData])
 
-  // Group roster by position type
+  if (!team) {
+    return (
+      <main className="container py-8">
+        <Link
+          href="/teams"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Teams
+        </Link>
+        <Card>
+          <CardContent className="py-12 flex flex-col items-center gap-4">
+            <AlertCircle className="h-12 w-12 text-muted-foreground" />
+            <p className="text-muted-foreground text-center">
+              {error || "Unable to load team data. The API may be temporarily unavailable."}
+            </p>
+          </CardContent>
+        </Card>
+      </main>
+    )
+  }
+
   const pitchers = roster.filter((p) => p.primaryPosition?.type === "Pitcher")
   const catchers = roster.filter((p) => p.primaryPosition?.abbreviation === "C")
   const infielders = roster.filter((p) => ["1B", "2B", "3B", "SS"].includes(p.primaryPosition?.abbreviation || ""))
@@ -73,6 +101,15 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         <ArrowLeft className="h-4 w-4" />
         Back to Teams
       </Link>
+
+      {error && (
+        <Card className="mb-6 border-destructive">
+          <CardContent className="py-4 flex items-center gap-2 text-destructive">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex flex-col md:flex-row gap-6 mb-8">
         <div className="relative h-24 w-24 shrink-0">

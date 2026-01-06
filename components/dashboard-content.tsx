@@ -5,7 +5,6 @@ import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
 import { StandingsMini } from "@/components/standings-mini"
 import { LeadersBarChart } from "@/components/leaders-bar-chart"
-import { TeamScatterChart } from "@/components/team-scatter-chart"
 import { LeaguePieChart } from "@/components/league-pie-chart"
 import { SeasonSelector } from "@/components/season-selector"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -68,7 +67,7 @@ export function DashboardContent({
       <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Stats</h1>
-          <p className="text-muted-foreground">Explore MLB statistics, compare players, and track standings</p>
+          <p className="text-muted-foreground">Explore MLB statistics and track standings</p>
         </div>
         <div className="ml-auto">
           <TriviaCard />
@@ -116,12 +115,11 @@ export function DashboardContent({
       {/* Data Visualizations Section */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Data Visualizations</h2>
-        <div className="grid gap-4 lg:grid-cols-3 mb-4">
+        <div className="grid gap-4 lg:grid-cols-3">
           <LeadersBarChart title="Home Run Leaders" leaders={hrLeaders} color="#ef4444" />
           <LeadersBarChart title="Strikeout Leaders (Pitching)" leaders={kLeaders} color="#3b82f6" />
           <LeaguePieChart alWins={alWins} nlWins={nlWins} />
         </div>
-        <TeamScatterChart standings={standings} />
       </div>
 
       {/* Leaders Grid */}

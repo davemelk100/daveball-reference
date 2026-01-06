@@ -7,7 +7,7 @@ import { getPlayer, getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Calendar, MapPin, Ruler, Scale, Plus } from "lucide-react"
+import { ArrowLeft, Calendar, MapPin, Ruler, Scale } from "lucide-react"
 
 interface PlayerPageProps {
   params: Promise<{ id: string }>
@@ -86,14 +86,6 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
               </span>
             </div>
           </div>
-
-          {/* Compare button */}
-          <Button asChild className="mt-4" size="sm">
-            <Link href={`/compare?player1=${player.id}`}>
-              <Plus className="h-4 w-4 mr-2" />
-              Compare Player
-            </Link>
-          </Button>
         </div>
       </div>
 
