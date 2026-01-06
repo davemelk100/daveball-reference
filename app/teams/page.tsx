@@ -1,9 +1,65 @@
+import { Suspense } from "react"
 import { getTeams, getDefaultSeason } from "@/lib/mlb-api"
 import type { Team } from "@/lib/mlb-api"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const revalidate = 3600
 
-export default async function TeamsPage() {
+function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
+  return (
+    <div className="space-y-10">
+      {divisions.map(([divisionName, divTeams]) => (
+        <section key={divisionName}>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <span
+              className={`h-2 w-2 rounded-full ${divisionName.includes("American") ? "bg-blue-500" : "bg-green-500"}`}
+            />
+            {divisionName}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {divTeams
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((team) => (
+                <a key={team.id} href={`/teams/${team.id}`} className="block">
+                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+                    <img
+                      src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
+                      alt={team.name}
+                      className="h-10 w-10 object-contain"
+                      loading="lazy"
+                    />
+                    <div>
+                      <p className="font-medium">{team.name}</p>
+                      <p className="text-sm text-muted-foreground">{team.abbreviation}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+function TeamsGridSkeleton() {
+  return (
+    <div className="space-y-10">
+      {[1, 2, 3].map((i) => (
+        <section key={i}>
+          <Skeleton className="h-6 w-48 mb-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5].map((j) => (
+              <Skeleton key={j} className="h-16 w-full" />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+async function TeamsContent() {
   const defaultSeason = getDefaultSeason()
   const teams = await getTeams(defaultSeason)
 
@@ -24,6 +80,10 @@ export default async function TeamsPage() {
     return a.localeCompare(b)
   })
 
+  return <TeamGrid divisions={sortedDivisions} />
+}
+
+export default function TeamsPage() {
   return (
     <main className="container py-8">
       <div className="mb-8">
@@ -31,37 +91,9 @@ export default async function TeamsPage() {
         <p className="text-muted-foreground mt-1">Browse all Major League Baseball teams by division</p>
       </div>
 
-      <div className="space-y-10">
-        {sortedDivisions.map(([divisionName, divTeams]) => (
-          <section key={divisionName}>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <span
-                className={`h-2 w-2 rounded-full ${divisionName.includes("American") ? "bg-blue-500" : "bg-green-500"}`}
-              />
-              {divisionName}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {divTeams
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((team) => (
-                  <a key={team.id} href={`/teams/${team.id}`} className="block">
-                    <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
-                      <img
-                        src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
-                        alt={team.name}
-                        className="h-10 w-10 object-contain"
-                      />
-                      <div>
-                        <p className="font-medium">{team.name}</p>
-                        <p className="text-sm text-muted-foreground">{team.abbreviation}</p>
-                      </div>
-                    </div>
-                  </a>
-                ))}
-            </div>
-          </section>
-        ))}
-      </div>
+      <Suspense fallback={<TeamsGridSkeleton />}>
+        <TeamsContent />
+      </Suspense>
     </main>
   )
 }

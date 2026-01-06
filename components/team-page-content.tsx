@@ -3,14 +3,34 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import dynamic from "next/dynamic"
 import { ArrowLeft, Loader2, AlertCircle } from "lucide-react"
 import { getTeamLogoUrl, getDefaultSeason } from "@/lib/mlb-api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { RosterTable } from "@/components/roster-table"
-import { HistoricalChart } from "@/components/historical-chart"
-import { HistoricalTable } from "@/components/historical-table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SeasonSelector } from "@/components/season-selector"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const RosterTable = dynamic(() => import("@/components/roster-table").then((mod) => ({ default: mod.RosterTable })), {
+  loading: () => <Skeleton className="h-64 w-full" />,
+  ssr: false,
+})
+
+const HistoricalChart = dynamic(
+  () => import("@/components/historical-chart").then((mod) => ({ default: mod.HistoricalChart })),
+  {
+    loading: () => <Skeleton className="h-80 w-full" />,
+    ssr: false,
+  },
+)
+
+const HistoricalTable = dynamic(
+  () => import("@/components/historical-table").then((mod) => ({ default: mod.HistoricalTable })),
+  {
+    loading: () => <Skeleton className="h-96 w-full" />,
+    ssr: false,
+  },
+)
 
 interface TeamPageContentProps {
   teamId: number
