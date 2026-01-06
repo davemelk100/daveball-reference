@@ -58,7 +58,7 @@ export function DashboardContent({
       {/* Hero Section */}
       <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Stats</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Universe</h1>
           <p className="text-muted-foreground">Explore MLB statistics and track standings</p>
         </div>
         <div className="ml-auto">

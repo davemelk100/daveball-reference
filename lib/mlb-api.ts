@@ -1,4 +1,4 @@
-// MLB Stats API utilities
+// MLB Universe API utilities
 
 const BASE_URL = "https://statsapi.mlb.com/api/v1"
 

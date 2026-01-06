@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { BarChart3, Users, Trophy, Shield } from "lucide-react"
 import { HeaderSearch } from "@/components/header-search"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
@@ -27,9 +28,16 @@ export function Header() {
               alt="MLB Logo"
               width={32}
               height={32}
-              className="h-8 w-8"
+              className="h-8 w-8 dark:block hidden"
             />
-            <span className="text-lg font-semibold tracking-tight">MLB Stats</span>
+            <Image
+              src="https://www.mlbstatic.com/team-logos/league-on-light/1.svg"
+              alt="MLB Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 dark:hidden block"
+            />
+            <span className="text-lg font-semibold tracking-tight">MLB Universe</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navigation.map((item) => {
@@ -52,7 +60,10 @@ export function Header() {
             })}
           </nav>
         </div>
-        <HeaderSearch />
+        <div className="flex items-center gap-2">
+          <HeaderSearch />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )
