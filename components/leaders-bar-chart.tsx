@@ -49,7 +49,9 @@ export function LeadersBarChart({ title, leaders, color = "#ef4444" }: LeadersBa
                 backgroundColor: "#1f2937",
                 border: "1px solid #374151",
                 borderRadius: "8px",
+                color: "#ffffff",
               }}
+              itemStyle={{ color: "#ffffff" }}
               formatter={(value: number, name: string, props: any) => [value, props.payload.fullName]}
               labelFormatter={() => ""}
             />

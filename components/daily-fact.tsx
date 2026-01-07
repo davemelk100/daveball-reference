@@ -19,7 +19,7 @@ export function DailyFact() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/10 bg-transparent">
+        <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/20 hover:text-black dark:hover:text-white bg-transparent">
           <Lightbulb className="h-4 w-4 text-primary" />
           <span>Did You Know?</span>
         </Button>
