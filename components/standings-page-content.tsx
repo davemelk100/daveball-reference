@@ -98,7 +98,7 @@ export function StandingsPageContent({ initialStandings, initialSeason }: Standi
         </div>
       ) : (
         <Tabs defaultValue="al" className="space-y-6">
-          <TabsList className="bg-[#ececec]">
+          <TabsList>
             <TabsTrigger value="al">American League</TabsTrigger>
             <TabsTrigger value="nl">National League</TabsTrigger>
             <TabsTrigger value="all">All Divisions</TabsTrigger>

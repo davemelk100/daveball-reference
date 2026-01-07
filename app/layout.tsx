@@ -74,9 +74,6 @@ export const metadata: Metadata = {
       "Explore MLB player stats, team rosters, and league standings in real-time.",
     images: ["/mln.png"],
   },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-  },
 };
 
 export default function RootLayout({

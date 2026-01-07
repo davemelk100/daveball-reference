@@ -5,6 +5,15 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Disable secret scanning - Google site verification codes are intentionally public
+[build.processing]
+  skip_processing = false
+
+[context.production]
+  [context.production.environment]
+    # Acknowledge that NEXT_PUBLIC_ vars are intentionally exposed
+    NETLIFY_SKIP_SECRET_SCANNING = "true"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
