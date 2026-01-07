@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import type { HallOfFamer } from "@/lib/mlb-api"
 import Image from "next/image"
@@ -16,19 +16,18 @@ interface HofPageContentProps {
 
 export function HofPageContent({ initialData }: HofPageContentProps) {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedDecade, setSelectedDecade] = useState<string>("all")
+  const [selectedYear, setSelectedYear] = useState<string>("all")
 
-  // Get unique decades for filtering
-  const decades = useMemo(() => {
-    const decadeSet = new Set<string>()
+  // Get unique years for filtering
+  const availableYears = useMemo(() => {
+    const yearSet = new Set<number>()
     initialData.forEach((member) => {
-      const decade = Math.floor(member.inductionYear / 10) * 10
-      decadeSet.add(decade.toString())
+      yearSet.add(member.inductionYear)
     })
-    return Array.from(decadeSet).sort((a, b) => Number(b) - Number(a))
+    return Array.from(yearSet).sort((a, b) => b - a)
   }, [initialData])
 
-  // Filter HOF members based on search and decade
+  // Filter HOF members based on search and year
   const filteredMembers = useMemo(() => {
     return initialData.filter((member) => {
       const matchesSearch =
@@ -36,13 +35,13 @@ export function HofPageContent({ initialData }: HofPageContentProps) {
         member.playerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.position?.toLowerCase().includes(searchQuery.toLowerCase())
 
-      const matchesDecade =
-        selectedDecade === "all" ||
-        Math.floor(member.inductionYear / 10) * 10 === Number(selectedDecade)
+      const matchesYear =
+        selectedYear === "all" ||
+        member.inductionYear === Number(selectedYear)
 
-      return matchesSearch && matchesDecade
+      return matchesSearch && matchesYear
     })
-  }, [initialData, searchQuery, selectedDecade])
+  }, [initialData, searchQuery, selectedYear])
 
   // Group by induction year
   const groupedByYear = useMemo(() => {
@@ -65,8 +64,7 @@ export function HofPageContent({ initialData }: HofPageContentProps) {
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2 flex items-center gap-3">
-              <Trophy className="h-8 w-8 text-yellow-500" />
+            <h1 className="text-3xl font-bold tracking-tight mb-2">
               Hall of Fame
             </h1>
             <p className="text-muted-foreground">
@@ -75,9 +73,35 @@ export function HofPageContent({ initialData }: HofPageContentProps) {
           </div>
         </div>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1 max-w-md">
+        {/* Year Selector */}
+        <div className="flex justify-center mb-6">
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <Card className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+              <CardContent className="p-0">
+                <SelectTrigger className="w-full border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl font-semibold text-[#4e6095]">Induction Year</span>
+                    <span className="text-xl font-bold border-b-2 border-foreground">
+                      <SelectValue placeholder="All Years" />
+                    </span>
+                  </div>
+                </SelectTrigger>
+              </CardContent>
+            </Card>
+            <SelectContent className="max-h-[300px]">
+              <SelectItem value="all">All Years</SelectItem>
+              {availableYears.map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Search */}
+        <div className="flex justify-center mb-6">
+          <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by name or position..."
@@ -85,25 +109,6 @@ export function HofPageContent({ initialData }: HofPageContentProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
             />
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <Badge
-              variant={selectedDecade === "all" ? "default" : "outline"}
-              className="cursor-pointer"
-              onClick={() => setSelectedDecade("all")}
-            >
-              All
-            </Badge>
-            {decades.slice(0, 8).map((decade) => (
-              <Badge
-                key={decade}
-                variant={selectedDecade === decade ? "default" : "outline"}
-                className="cursor-pointer"
-                onClick={() => setSelectedDecade(decade)}
-              >
-                {decade}s
-              </Badge>
-            ))}
           </div>
         </div>
       </div>

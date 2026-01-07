@@ -36,7 +36,7 @@ const PlayerSpotlight = dynamic(() => import("@/components/player-spotlight").th
 
 interface LeagueLeader {
   value: string | number
-  person?: { fullName: string }
+  person?: { id: number; fullName: string }
 }
 
 interface DashboardData {
@@ -99,7 +99,12 @@ export function DashboardContent({
     const leader = selectedLeague === "AL" ? al : nl
     if (!leader) return undefined
     return [
-      { league: selectedLeague, value: leader?.value || "—", name: leader?.person?.fullName || "No data" },
+      {
+        league: selectedLeague,
+        value: leader?.value || "—",
+        name: leader?.person?.fullName || "No data",
+        playerId: leader?.person?.id,
+      },
     ]
   }
 

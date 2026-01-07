@@ -1,11 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
+import Image from "next/image"
 import type { LucideIcon } from "lucide-react"
 
 interface Leader {
   value: string | number
   name: string
   league: "AL" | "NL"
+  playerId?: number
 }
 
 interface StatCardProps {
@@ -30,12 +33,26 @@ export function StatCard({ title, value, description, leaders, icon: Icon, trend
           {Icon && <Icon className="h-3 w-3 text-muted-foreground" />}
         </div>
         {leaders ? (
-          <div className="space-y-1">
+          <div className="space-y-2">
             {leaders.map((leader, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <span className="text-muted-foreground font-medium">{leader.league}</span>
-                <span className="font-bold">{leader.value}</span>
-                <span className="text-muted-foreground truncate max-w-[140px]">{leader.name}</span>
+              <div key={idx} className="flex items-center gap-3">
+                {leader.playerId && (
+                  <div className="relative h-12 w-12 rounded-full overflow-hidden bg-muted flex-shrink-0">
+                    <Image
+                      src={getPlayerHeadshotUrl(leader.playerId, "small")}
+                      alt={leader.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-lg">{leader.value}</span>
+                    <span className="text-muted-foreground font-medium">{leader.league}</span>
+                  </div>
+                  <span className="text-muted-foreground truncate block">{leader.name}</span>
+                </div>
               </div>
             ))}
           </div>
