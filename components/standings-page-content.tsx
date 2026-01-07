@@ -4,8 +4,7 @@ import { useState, useEffect } from "react"
 import { StandingsTable } from "@/components/standings-table"
 import { SeasonSelector } from "@/components/season-selector"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Calendar, AlertCircle } from "lucide-react"
+import { Loader2, AlertCircle } from "lucide-react"
 
 interface StandingsPageContentProps {
   initialStandings: any[]
@@ -66,17 +65,7 @@ export function StandingsPageContent({ initialStandings, initialSeason }: Standi
             <h1 className="text-3xl font-bold tracking-tight mb-2">MLB Standings</h1>
             <p className="text-muted-foreground">{season} Regular Season standings by division</p>
           </div>
-          <Card className="w-fit">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Season
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <SeasonSelector season={season} onSeasonChange={setSeason} />
-            </CardContent>
-          </Card>
+          <SeasonSelector season={season} onSeasonChange={setSeason} />
         </div>
       </div>
 

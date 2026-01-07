@@ -523,6 +523,63 @@ export async function getCyYoungWinners(season?: number): Promise<{ al: AwardWin
   }
 }
 
+export interface AllStarAppearance {
+  season: number
+  league: "AL" | "NL"
+  team?: {
+    id: number
+    name: string
+  }
+}
+
+export async function getPlayerAllStarAppearances(playerId: number): Promise<AllStarAppearance[]> {
+  const cacheKey = `allstar:${playerId}`
+  const cached = getCached<AllStarAppearance[]>(cacheKey)
+  if (cached) return cached
+
+  try {
+    // Fetch both AL and NL All-Star recipients
+    const [alRes, nlRes] = await Promise.all([
+      fetchWithRetry(`${BASE_URL}/awards/ALAS/recipients?sportId=1`),
+      fetchWithRetry(`${BASE_URL}/awards/NLAS/recipients?sportId=1`),
+    ])
+
+    const [alData, nlData] = await Promise.all([safeJsonParse(alRes), safeJsonParse(nlRes)])
+
+    const appearances: AllStarAppearance[] = []
+
+    // Filter AL All-Star appearances for this player
+    for (const award of alData?.awards || []) {
+      if (award.player?.id === playerId) {
+        appearances.push({
+          season: award.season ? Number.parseInt(award.season) : new Date(award.date).getFullYear(),
+          league: "AL",
+          team: award.team ? { id: award.team.id, name: award.team.name } : undefined,
+        })
+      }
+    }
+
+    // Filter NL All-Star appearances for this player
+    for (const award of nlData?.awards || []) {
+      if (award.player?.id === playerId) {
+        appearances.push({
+          season: award.season ? Number.parseInt(award.season) : new Date(award.date).getFullYear(),
+          league: "NL",
+          team: award.team ? { id: award.team.id, name: award.team.name } : undefined,
+        })
+      }
+    }
+
+    // Sort by season descending
+    const sorted = appearances.sort((a, b) => b.season - a.season)
+    setCache(cacheKey, sorted, CACHE_TTL_LONG)
+    return sorted
+  } catch (error) {
+    console.error("Error fetching All-Star appearances:", error)
+    return []
+  }
+}
+
 // Helper functions for player headshots and team logos
 export function getPlayerHeadshotUrl(playerId: number, size: "small" | "medium" | "large" = "medium"): string {
   const sizeMap = {

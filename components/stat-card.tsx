@@ -33,9 +33,9 @@ export function StatCard({ title, value, description, leaders, icon: Icon, trend
           <div className="space-y-1">
             {leaders.map((leader, idx) => (
               <div key={idx} className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground font-medium">{leader.league}</span>
-                <span className="text-sm font-bold">{leader.value}</span>
-                <span className="text-xs text-muted-foreground truncate max-w-[100px]">{leader.name}</span>
+                <span className="text-muted-foreground font-medium">{leader.league}</span>
+                <span className="font-bold">{leader.value}</span>
+                <span className="text-muted-foreground truncate max-w-[140px]">{leader.name}</span>
               </div>
             ))}
           </div>
