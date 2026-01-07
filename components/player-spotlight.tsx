@@ -1,43 +1,41 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { User, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { User, Star } from "lucide-react"
 import { getDailyPlayer, type SpotlightPlayer } from "@/lib/player-spotlight-data"
 import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 
 export function PlayerSpotlight() {
   const [player, setPlayer] = useState<SpotlightPlayer | null>(null)
-  const [dismissed, setDismissed] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     setPlayer(getDailyPlayer())
-    const today = new Date().toISOString().split("T")[0]
-    const dismissedDate = localStorage.getItem("mlb-spotlight-dismissed")
-    if (dismissedDate === today) {
-      setDismissed(true)
-    }
   }, [])
 
-  const handleDismiss = () => {
-    const today = new Date().toISOString().split("T")[0]
-    localStorage.setItem("mlb-spotlight-dismissed", today)
-    setDismissed(true)
-  }
-
-  if (!player || dismissed) return null
+  if (!player) return null
 
   return (
-    <Card>
-      <CardContent className="py-0.5 px-4 relative">
-        <div className="flex flex-col gap-1">
-          <span className="text-base font-semibold">Player of the Day</span>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/10 bg-transparent">
+          <Star className="h-4 w-4 text-primary" />
+          <span>Player of the Day</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-4" align="end">
+        <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Link href={`/players/${player.id}`} className="shrink-0">
+            <Star className="h-4 w-4 text-primary" />
+            <span className="font-semibold">Player of the Day</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href={`/players/${player.id}`} className="shrink-0" onClick={() => setIsOpen(false)}>
               {!imageError ? (
                 <Image
                   src={getPlayerHeadshotUrl(player.id) || "/placeholder.svg"}
@@ -53,22 +51,19 @@ export function PlayerSpotlight() {
                 </div>
               )}
             </Link>
-            <Link href={`/players/${player.id}`} className="text-sm font-medium hover:underline">
-              {player.name}
-            </Link>
+            <div className="flex-1 min-w-0">
+              <Link
+                href={`/players/${player.id}`}
+                className="font-medium hover:underline block truncate"
+                onClick={() => setIsOpen(false)}
+              >
+                {player.name}
+              </Link>
+              <p className="text-sm text-muted-foreground mt-1">{player.fact}</p>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground">{player.fact}</p>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-5 w-5 shrink-0 text-muted-foreground hover:text-foreground absolute top-2 right-2"
-            onClick={handleDismiss}
-            aria-label="Dismiss spotlight"
-          >
-            <X className="h-3 w-3" />
-          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </PopoverContent>
+    </Popover>
   )
 }
