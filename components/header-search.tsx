@@ -78,9 +78,9 @@ export function HeaderSearch() {
                 <Image
                   src={getPlayerHeadshotUrl(player.id, "small") || "/placeholder.svg"}
                   alt={player.fullName}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full object-cover bg-muted"
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full object-cover bg-muted"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{player.fullName}</p>

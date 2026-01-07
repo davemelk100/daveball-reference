@@ -102,7 +102,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
 
       {/* Player Header */}
       <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="relative h-24 w-24 md:h-32 md:w-32 rounded-full overflow-hidden bg-muted shrink-0">
+        <div className="relative h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden bg-muted shrink-0">
           <Image
             src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
             alt={player.fullName}

@@ -21,7 +21,7 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
       href={`/players/${winner.playerId}`}
       className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors"
     >
-      <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted flex-shrink-0">
+      <div className="relative h-14 w-14 rounded-full overflow-hidden bg-muted flex-shrink-0">
         <Image
           src={getPlayerHeadshotUrl(winner.playerId, "small") || "/placeholder.svg"}
           alt={winner.playerName}

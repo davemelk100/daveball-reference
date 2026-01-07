@@ -5,7 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { BarChart3, Users, Trophy, Shield, Menu, X } from "lucide-react"
+import { BarChart3, Users, Trophy, Shield, Menu, X, Award } from "lucide-react"
 import { HeaderSearch } from "@/components/header-search"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,7 @@ const navigation = [
   { name: "Players", href: "/players", icon: Users },
   { name: "Teams", href: "/teams", icon: Shield },
   { name: "Standings", href: "/standings", icon: Trophy },
+  { name: "HOF", href: "/hof", icon: Award },
 ]
 
 export function Header() {

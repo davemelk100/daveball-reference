@@ -77,7 +77,7 @@ export function PlayersPageContent({ initialPlayers, initialSeason }: PlayersPag
               <Card key={i} className="animate-pulse">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-secondary" />
+                    <div className="h-20 w-20 rounded-full bg-secondary" />
                     <div className="flex-1">
                       <div className="h-4 w-24 bg-secondary rounded mb-2" />
                       <div className="h-3 w-32 bg-secondary rounded" />

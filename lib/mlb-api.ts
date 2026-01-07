@@ -523,6 +523,48 @@ export async function getCyYoungWinners(season?: number): Promise<{ al: AwardWin
   }
 }
 
+export interface HallOfFamer {
+  playerId: number
+  playerName: string
+  inductionYear: number
+  position?: string
+  team?: {
+    id: number
+    name: string
+  }
+  votes?: string
+  notes?: string
+}
+
+export async function getHallOfFamers(): Promise<HallOfFamer[]> {
+  const cacheKey = "hof:all"
+  const cached = getCached<HallOfFamer[]>(cacheKey)
+  if (cached) return cached
+
+  try {
+    const res = await fetchWithRetry(`${BASE_URL}/awards/MLBHOF/recipients?sportId=1`)
+    const data = await safeJsonParse(res)
+
+    const hofList: HallOfFamer[] = (data?.awards || []).map((award: any) => ({
+      playerId: award.player?.id,
+      playerName: award.player?.nameFirstLast || award.player?.fullName || "Unknown",
+      inductionYear: award.season ? Number.parseInt(award.season) : new Date(award.date).getFullYear(),
+      position: award.player?.primaryPosition?.abbreviation,
+      team: award.team ? { id: award.team.id, name: award.team.name } : undefined,
+      votes: award.votes,
+      notes: award.notes,
+    }))
+
+    // Sort by induction year descending
+    const sorted = hofList.sort((a, b) => b.inductionYear - a.inductionYear)
+    setCache(cacheKey, sorted, CACHE_TTL_LONG)
+    return sorted
+  } catch (error) {
+    console.error("Error fetching Hall of Famers:", error)
+    return []
+  }
+}
+
 export interface AllStarAppearance {
   season: number
   league: "AL" | "NL"
