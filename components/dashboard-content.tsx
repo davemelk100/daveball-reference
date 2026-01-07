@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
 import { SeasonSelector } from "@/components/season-selector"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import useSWR from "swr"
@@ -60,6 +61,7 @@ export function DashboardContent({
   initialSeason,
 }: { initialData: DashboardData; initialSeason: number }) {
   const [season, setSeason] = useState(initialSeason)
+  const [selectedLeague, setSelectedLeague] = useState<"AL" | "NL">("AL")
 
   const { data, isLoading } = useSWR<DashboardData>(`/api/dashboard?season=${season}`, fetcher, {
     fallbackData: season === initialSeason ? initialData : undefined,
@@ -79,11 +81,11 @@ export function DashboardContent({
   const seasonStatus = isCurrentSeason ? "In Progress" : "Completed"
   const seasonDescription = isCurrentSeason ? "Regular season games" : "Final standings"
 
-  const formatLeaders = (al: LeagueLeader | undefined, nl: LeagueLeader | undefined) => {
-    if (!al && !nl) return undefined
+  const formatLeader = (al: LeagueLeader | undefined, nl: LeagueLeader | undefined) => {
+    const leader = selectedLeague === "AL" ? al : nl
+    if (!leader) return undefined
     return [
-      { league: "AL" as const, value: al?.value || "—", name: al?.person?.fullName || "No data" },
-      { league: "NL" as const, value: nl?.value || "—", name: nl?.person?.fullName || "No data" },
+      { league: selectedLeague, value: leader?.value || "—", name: leader?.person?.fullName || "No data" },
     ]
   }
 
@@ -108,25 +110,35 @@ export function DashboardContent({
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8">
-        <StatCard
-          title="Home Run Leader"
-          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.hr?.al, leagueLeaders?.hr?.nl)}
-          value={isLoading ? "..." : undefined}
-          description={isLoading ? "Loading..." : undefined}
-        />
-        <StatCard
-          title="Batting Avg Leader"
-          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.avg?.al, leagueLeaders?.avg?.nl)}
-          value={isLoading ? "..." : undefined}
-          description={isLoading ? "Loading..." : undefined}
-        />
-        <StatCard
-          title="ERA Leader"
-          leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.era?.al, leagueLeaders?.era?.nl)}
-          value={isLoading ? "..." : undefined}
-          description={isLoading ? "Loading..." : undefined}
-        />
+      <div className="mb-8">
+        <div className="mb-4">
+          <Tabs value={selectedLeague} onValueChange={(value) => setSelectedLeague(value as "AL" | "NL")}>
+            <TabsList>
+              <TabsTrigger value="AL">AL</TabsTrigger>
+              <TabsTrigger value="NL">NL</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          <StatCard
+            title="Home Run Leader"
+            leaders={isLoading ? undefined : formatLeader(leagueLeaders?.hr?.al, leagueLeaders?.hr?.nl)}
+            value={isLoading ? "..." : undefined}
+            description={isLoading ? "Loading..." : undefined}
+          />
+          <StatCard
+            title="Batting Avg Leader"
+            leaders={isLoading ? undefined : formatLeader(leagueLeaders?.avg?.al, leagueLeaders?.avg?.nl)}
+            value={isLoading ? "..." : undefined}
+            description={isLoading ? "Loading..." : undefined}
+          />
+          <StatCard
+            title="ERA Leader"
+            leaders={isLoading ? undefined : formatLeader(leagueLeaders?.era?.al, leagueLeaders?.era?.nl)}
+            value={isLoading ? "..." : undefined}
+            description={isLoading ? "Loading..." : undefined}
+          />
+        </div>
       </div>
 
       {/* Award Winners */}

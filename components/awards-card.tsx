@@ -40,18 +40,18 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="al" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-3">
+      <Tabs defaultValue="al" className="w-full">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-base font-semibold">
+            {title}
+          </CardTitle>
+          <TabsList>
             <TabsTrigger value="al">AL</TabsTrigger>
             <TabsTrigger value="nl">NL</TabsTrigger>
           </TabsList>
-          <TabsContent value="al" className="space-y-1">
+        </CardHeader>
+        <CardContent>
+          <TabsContent value="al" className="space-y-1 mt-0">
             {alWinners.slice(0, limit).map((winner) => (
               <WinnerRow key={`${winner.playerId}-${winner.season}`} winner={winner} />
             ))}
@@ -59,7 +59,7 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
               <p className="text-sm text-muted-foreground text-center py-4">No data available</p>
             )}
           </TabsContent>
-          <TabsContent value="nl" className="space-y-1">
+          <TabsContent value="nl" className="space-y-1 mt-0">
             {nlWinners.slice(0, limit).map((winner) => (
               <WinnerRow key={`${winner.playerId}-${winner.season}`} winner={winner} />
             ))}
@@ -67,8 +67,8 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
               <p className="text-sm text-muted-foreground text-center py-4">No data available</p>
             )}
           </TabsContent>
-        </Tabs>
-      </CardContent>
+        </CardContent>
+      </Tabs>
     </Card>
   )
 }

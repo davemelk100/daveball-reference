@@ -44,7 +44,7 @@ export function Header() {
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                     pathname === item.href
-                      ? "bg-secondary text-black"
+                      ? "bg-secondary/50 text-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                   )}
                 >
@@ -82,7 +82,7 @@ export function Header() {
                   className={cn(
                     "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-md transition-colors",
                     pathname === item.href
-                      ? "bg-secondary text-black"
+                      ? "bg-secondary/50 text-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                   )}
                 >
