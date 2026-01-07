@@ -351,7 +351,12 @@ export async function getTeamRoster(teamId: number, season = getDefaultSeason())
   try {
     const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}/roster?season=${season}`)
     const data = await safeJsonParse(res)
-    const result = data?.roster?.map((r: any) => r.person) || []
+    const result = data?.roster?.map((r: any) => ({
+      ...r.person,
+      primaryNumber: r.jerseyNumber,
+      primaryPosition: r.position,
+      status: r.status,
+    })) || []
     setCache(cacheKey, result)
     return result
   } catch (error) {

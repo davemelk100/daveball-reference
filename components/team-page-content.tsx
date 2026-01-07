@@ -32,6 +32,13 @@ const HistoricalTable = dynamic(
   },
 )
 
+const TeamLogos = dynamic(
+  () => import("@/components/team-logos").then((mod) => ({ default: mod.TeamLogos })),
+  {
+    loading: () => <Skeleton className="h-48 w-full" />,
+  },
+)
+
 interface TeamPageContentProps {
   teamId: number
   initialData: {
@@ -141,7 +148,13 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           />
         </div>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold tracking-tight">{team.name}</h1>
+          <div className="flex items-center gap-4 flex-wrap">
+            <h1 className="text-3xl font-bold tracking-tight">{team.name}</h1>
+            <div className="flex items-center gap-2">
+              <SeasonSelector season={season} onSeasonChange={setSeason} />
+              {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+            </div>
+          </div>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
           </p>
@@ -149,17 +162,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Season</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-2">
-            <SeasonSelector season={season} onSeasonChange={setSeason} />
-            {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {teamRecord ? (
           <>
             <Card>
@@ -203,7 +206,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
             </Card>
           </>
         ) : (
-          <Card className="col-span-4">
+          <Card className="col-span-2 sm:col-span-4">
             <CardContent className="py-6 text-center text-muted-foreground">
               No standings data available for {season}
             </CardContent>
@@ -215,6 +218,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         <TabsList>
           <TabsTrigger value="history">Historical Data (1960-Present)</TabsTrigger>
           <TabsTrigger value="roster">{season} Roster</TabsTrigger>
+          <TabsTrigger value="logos">Logos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="history" className="space-y-6">
@@ -251,6 +255,10 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        <TabsContent value="logos">
+          <TeamLogos teamId={team.id} teamName={team.name} />
         </TabsContent>
       </Tabs>
     </main>

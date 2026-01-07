@@ -27,7 +27,7 @@ export function Header() {
         <div className="flex items-center gap-8">
           <Link href="/">
             <Image
-              src="/mln-logo.png"
+              src="/min.png"
               alt="Major League Numbers Logo"
               width={161}
               height={100}
