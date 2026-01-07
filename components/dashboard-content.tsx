@@ -97,15 +97,11 @@ export function DashboardContent({
           <h1 className="text-3xl font-bold tracking-tight mb-2">Major League Numbers</h1>
           <p className="text-muted-foreground">Explore MLB statistics and track standings</p>
         </div>
-        <div className="ml-auto">
+        <div className="flex items-center gap-2 flex-wrap">
+          <DailyFact />
+          <PlayerSpotlight />
           <TriviaCard />
         </div>
-      </div>
-
-      {/* DailyFact and PlayerSpotlight */}
-      <div className="mb-8 grid gap-4 md:grid-cols-2">
-        <DailyFact />
-        <PlayerSpotlight />
       </div>
 
       {/* Quick Stats */}
