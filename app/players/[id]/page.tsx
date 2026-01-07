@@ -5,11 +5,11 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { PlayerJsonLd, BreadcrumbJsonLd } from "@/components/json-ld"
-import { getPlayer, getPlayerHeadshotUrl } from "@/lib/mlb-api"
+import { getPlayer, getPlayerHeadshotUrl, getPlayerAllStarAppearances } from "@/lib/mlb-api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Calendar, MapPin, Ruler, Scale } from "lucide-react"
+import { ArrowLeft, Calendar, MapPin, Ruler, Scale, Star } from "lucide-react"
 
 interface PlayerPageProps {
   params: Promise<{ id: string }>
@@ -60,7 +60,10 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
 
 export default async function PlayerPage({ params }: PlayerPageProps) {
   const { id } = await params
-  const player = await getPlayer(Number(id))
+  const [player, allStarAppearances] = await Promise.all([
+    getPlayer(Number(id)),
+    getPlayerAllStarAppearances(Number(id)),
+  ])
 
   if (!player) {
     notFound()
@@ -140,6 +143,15 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
               </span>
             </div>
           </div>
+          {allStarAppearances.length > 0 && (
+            <div className="mt-4 flex items-center gap-2">
+              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              <span className="font-medium">{allStarAppearances.length}x All-Star</span>
+              <span className="text-muted-foreground">
+                ({allStarAppearances.map((a) => a.season).join(", ")})
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
