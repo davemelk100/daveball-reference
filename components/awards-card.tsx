@@ -31,8 +31,8 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
         />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm truncate">{winner.playerName}</p>
-        <p className="text-xs text-muted-foreground truncate">{winner.team?.name || "—"}</p>
+        <p className="font-medium truncate">{winner.playerName}</p>
+        <p className="text-muted-foreground truncate">{winner.team?.name || "—"}</p>
       </div>
       <span className="text-sm font-semibold text-primary">{winner.season}</span>
     </Link>

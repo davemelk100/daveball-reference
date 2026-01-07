@@ -184,8 +184,16 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    font-size: 18px;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  p {
+    font-size: 1rem;
   }
 }
 
