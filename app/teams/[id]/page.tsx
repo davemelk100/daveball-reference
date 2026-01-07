@@ -1,13 +1,58 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { getTeam, getTeamRoster, getStandings, getTeamHistory, getDefaultSeason } from "@/lib/mlb-api"
 import { TeamPageContent } from "@/components/team-page-content"
+import { TeamJsonLd, BreadcrumbJsonLd } from "@/components/json-ld"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export const revalidate = 3600
 
 interface TeamPageProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: TeamPageProps): Promise<Metadata> {
+  const { id } = await params
+  const team = await getTeam(Number(id))
+
+  if (!team) {
+    return {
+      title: "Team Not Found | Major League Numbers",
+      description: "The requested team could not be found.",
+    }
+  }
+
+  const division = team.division?.name || "MLB"
+  const league = team.league?.name || "Major League Baseball"
+  const description = `View ${team.name} roster, stats, standings, and team history. ${division} - ${league}.`
+
+  return {
+    title: `${team.name} Stats & Roster`,
+    description,
+    alternates: {
+      canonical: `/teams/${team.id}`,
+    },
+    openGraph: {
+      title: `${team.name} - MLB Team Stats`,
+      description,
+      type: "website",
+      images: [
+        {
+          url: `https://www.mlbstatic.com/team-logos/${team.id}.svg`,
+          width: 200,
+          height: 200,
+          alt: `${team.name} logo`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: `${team.name} Stats & Roster`,
+      description,
+      images: [`https://www.mlbstatic.com/team-logos/${team.id}.svg`],
+    },
+  }
 }
 
 function TeamDetailSkeleton() {
@@ -57,15 +102,25 @@ async function TeamContent({ id }: { id: string }) {
   }
 
   return (
-    <TeamPageContent
-      teamId={teamId}
-      initialData={{
-        team,
-        roster,
-        teamRecord,
-        history,
-      }}
-    />
+    <>
+      <TeamJsonLd team={team} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://majorleaguenumbers.com" },
+          { name: "Teams", url: "https://majorleaguenumbers.com/teams" },
+          { name: team.name, url: `https://majorleaguenumbers.com/teams/${team.id}` },
+        ]}
+      />
+      <TeamPageContent
+        teamId={teamId}
+        initialData={{
+          team,
+          roster,
+          teamRecord,
+          history,
+        }}
+      />
+    </>
   )
 }
 

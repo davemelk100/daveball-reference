@@ -1,10 +1,13 @@
 "use client"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
+import { Loader2 } from "lucide-react"
 
 interface SeasonSelectorProps {
   season: number
   onSeasonChange: (season: number) => void
+  isLoading?: boolean
 }
 
 const getMaxYear = () => {
@@ -21,12 +24,22 @@ const getMaxYear = () => {
 const maxYear = getMaxYear()
 const seasons = Array.from({ length: maxYear - 1960 + 1 }, (_, i) => maxYear - i)
 
-export function SeasonSelector({ season, onSeasonChange }: SeasonSelectorProps) {
+export function SeasonSelector({ season, onSeasonChange, isLoading }: SeasonSelectorProps) {
   return (
     <Select value={season.toString()} onValueChange={(val) => onSeasonChange(Number.parseInt(val))}>
-      <SelectTrigger className="w-[100px] text-lg font-bold border-none shadow-none p-0 h-auto [&_svg]:opacity-100 [&_svg]:size-5 [&_svg]:text-primary">
-        <SelectValue placeholder="Season" />
-      </SelectTrigger>
+      <Card className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+        <CardContent className="p-0">
+          <SelectTrigger className="w-full border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
+            <div className="flex items-center gap-3">
+              <span className="text-xl font-semibold text-[#4e6095]">Season</span>
+              <span className="text-xl font-bold border-b-2 border-foreground">
+                <SelectValue placeholder="Season" />
+              </span>
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+            </div>
+          </SelectTrigger>
+        </CardContent>
+      </Card>
       <SelectContent className="max-h-[300px]">
         {seasons.map((year) => (
           <SelectItem key={year} value={year.toString()}>

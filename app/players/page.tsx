@@ -1,8 +1,27 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { PlayersPageContent } from "@/components/players-page-content"
 import { getLeaders, getDefaultSeason } from "@/lib/mlb-api"
 
 export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: "MLB Players",
+  description: "Browse MLB players, search by name or team, and view detailed statistics for current and historical players.",
+  alternates: {
+    canonical: "/players",
+  },
+  openGraph: {
+    title: "MLB Players - Search & Stats",
+    description: "Browse MLB players, search by name or team, and view detailed statistics for current and historical players.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MLB Players",
+    description: "Browse MLB players, search by name or team, and view detailed statistics.",
+  },
+}
 
 export default async function PlayersPage() {
   const defaultSeason = getDefaultSeason()

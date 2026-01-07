@@ -1,8 +1,10 @@
+import type { Metadata } from "next"
 import { PlayerStatsTable } from "@/components/player-stats-table"
 import { StatCard } from "@/components/stat-card"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { PlayerJsonLd, BreadcrumbJsonLd } from "@/components/json-ld"
 import { getPlayer, getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
@@ -11,6 +13,49 @@ import { ArrowLeft, Calendar, MapPin, Ruler, Scale } from "lucide-react"
 
 interface PlayerPageProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: PlayerPageProps): Promise<Metadata> {
+  const { id } = await params
+  const player = await getPlayer(Number(id))
+
+  if (!player) {
+    return {
+      title: "Player Not Found | Major League Numbers",
+      description: "The requested player could not be found.",
+    }
+  }
+
+  const position = player.primaryPosition?.name || "Player"
+  const team = player.currentTeam?.name || "Free Agent"
+  const description = `View ${player.fullName}'s MLB stats, career history, and performance data. ${position} for ${team}.`
+
+  return {
+    title: `${player.fullName} Stats`,
+    description,
+    alternates: {
+      canonical: `/players/${player.id}`,
+    },
+    openGraph: {
+      title: `${player.fullName} - MLB Player Stats`,
+      description,
+      type: "profile",
+      images: [
+        {
+          url: getPlayerHeadshotUrl(player.id, "large") || "/mln.png",
+          width: 400,
+          height: 400,
+          alt: `${player.fullName} headshot`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: `${player.fullName} Stats`,
+      description,
+      images: [getPlayerHeadshotUrl(player.id, "large") || "/mln.png"],
+    },
+  }
 }
 
 export default async function PlayerPage({ params }: PlayerPageProps) {
@@ -34,9 +79,18 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
   const isPitcher = player.primaryPosition?.type === "Pitcher"
 
   return (
-    <main className="container py-8">
-      {/* Back button */}
-      <Button variant="ghost" size="sm" asChild className="mb-6">
+    <>
+      <PlayerJsonLd player={player} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://majorleaguenumbers.com" },
+          { name: "Players", url: "https://majorleaguenumbers.com/players" },
+          { name: player.fullName, url: `https://majorleaguenumbers.com/players/${player.id}` },
+        ]}
+      />
+      <main className="container py-8">
+        {/* Back button */}
+        <Button variant="ghost" size="sm" asChild className="mb-6">
         <Link href="/players">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Players
@@ -131,6 +185,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
           </Card>
         )}
       </div>
-    </main>
+      </main>
+    </>
   )
 }

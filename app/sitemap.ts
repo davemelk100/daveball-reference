@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next"
-import { getTeams } from "@/lib/mlb-api"
+import { getTeams, getLeaders, getDefaultSeason } from "@/lib/mlb-api"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://mlb-universe.vercel.app"
+  const baseUrl = "https://majorleaguenumbers.com"
+  const defaultSeason = getDefaultSeason()
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -46,5 +47,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error fetching teams for sitemap:", error)
   }
 
-  return [...staticPages, ...teamPages]
+  // Dynamic player pages - get top players from various categories
+  let playerPages: MetadataRoute.Sitemap = []
+  try {
+    const [hrLeaders, avgLeaders, eraLeaders, winsLeaders] = await Promise.all([
+      getLeaders("hitting", "homeRuns", defaultSeason, 50),
+      getLeaders("hitting", "battingAverage", defaultSeason, 50),
+      getLeaders("pitching", "earnedRunAverage", defaultSeason, 50),
+      getLeaders("pitching", "wins", defaultSeason, 50),
+    ])
+
+    // Collect unique player IDs
+    const playerIds = new Set<number>()
+    for (const leader of [...hrLeaders, ...avgLeaders, ...eraLeaders, ...winsLeaders]) {
+      if (leader.person?.id) {
+        playerIds.add(leader.person.id)
+      }
+    }
+
+    playerPages = Array.from(playerIds).map((id) => ({
+      url: `${baseUrl}/players/${id}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }))
+  } catch (error) {
+    console.error("Error fetching players for sitemap:", error)
+  }
+
+  return [...staticPages, ...teamPages, ...playerPages]
 }

@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Trophy, Award } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
@@ -10,14 +9,12 @@ import type { AwardWinner } from "@/lib/awards-data"
 
 interface AwardsCardProps {
   title: string
-  icon: "trophy" | "award"
   alWinners: AwardWinner[]
   nlWinners: AwardWinner[]
   limit?: number
 }
 
-export function AwardsCard({ title, icon, alWinners, nlWinners, limit = 5 }: AwardsCardProps) {
-  const Icon = icon === "trophy" ? Trophy : Award
+export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCardProps) {
 
   const WinnerRow = ({ winner }: { winner: AwardWinner }) => (
     <Link
@@ -44,8 +41,7 @@ export function AwardsCard({ title, icon, alWinners, nlWinners, limit = 5 }: Awa
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <Icon className="h-4 w-4 text-yellow-500" />
+        <CardTitle className="text-base font-semibold">
           {title}
         </CardTitle>
       </CardHeader>

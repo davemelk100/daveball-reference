@@ -1,9 +1,28 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { getTeams, getDefaultSeason } from "@/lib/mlb-api"
 import type { Team } from "@/lib/mlb-api"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: "MLB Teams",
+  description: "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
+  alternates: {
+    canonical: "/teams",
+  },
+  openGraph: {
+    title: "MLB Teams - All 30 Teams",
+    description: "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MLB Teams",
+    description: "Browse all 30 MLB teams by division with rosters and stats.",
+  },
+}
 
 function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
   return (

@@ -5,9 +5,7 @@ import dynamic from "next/dynamic"
 import { StatCard } from "@/components/stat-card"
 import { LeadersTable } from "@/components/leaders-table"
 import { SeasonSelector } from "@/components/season-selector"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Activity, Loader2 } from "lucide-react"
 import Link from "next/link"
 import useSWR from "swr"
 import type { AwardWinner } from "@/lib/awards-data"
@@ -104,24 +102,13 @@ export function DashboardContent({
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Card className="py-2 px-3">
-          <CardContent className="p-0">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-base font-semibold">Season</span>
-              <Activity className="h-3 w-3 text-muted-foreground" />
-            </div>
-            <div className="flex items-center gap-2">
-              <SeasonSelector season={season} onSeasonChange={setSeason} />
-              {isLoading && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
-            </div>
-            <p className="text-xs text-muted-foreground truncate">
-              {seasonStatus} · {seasonDescription}
-            </p>
-          </CardContent>
-        </Card>
+      {/* Season Card */}
+      <div className="mb-4">
+        <SeasonSelector season={season} onSeasonChange={setSeason} isLoading={isLoading} />
+      </div>
 
+      {/* Quick Stats */}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8">
         <StatCard
           title="Home Run Leader"
           leaders={isLoading ? undefined : formatLeaders(leagueLeaders?.hr?.al, leagueLeaders?.hr?.nl)}
