@@ -228,6 +228,23 @@ export async function getPlayer(playerId: number): Promise<Player | null> {
   }
 }
 
+export async function getAllPlayers(season = getDefaultSeason()): Promise<Player[]> {
+  const cacheKey = `all-players:${season}`
+  const cached = getCached<Player[]>(cacheKey)
+  if (cached) return cached
+
+  try {
+    const res = await fetchWithRetry(`${BASE_URL}/sports/1/players?season=${season}`)
+    const data = await safeJsonParse(res)
+    const result = data?.people || []
+    setCache(cacheKey, result, CACHE_TTL_LONG)
+    return result
+  } catch (error) {
+    console.error("Error fetching all players:", error)
+    return []
+  }
+}
+
 export async function getPlayerStats(playerId: number, season = getDefaultSeason()): Promise<PlayerStats[]> {
   try {
     const res = await fetchWithRetry(

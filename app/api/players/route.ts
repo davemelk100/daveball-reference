@@ -1,11 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getLeaders, getPlayer, getDefaultSeason } from "@/lib/mlb-api"
+import { getLeaders, getPlayer, getDefaultSeason, getAllPlayers } from "@/lib/mlb-api"
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const season = Number.parseInt(searchParams.get("season") || getDefaultSeason().toString())
+  const type = searchParams.get("type")
 
   try {
+    if (type === "all") {
+      const allPlayers = await getAllPlayers(season)
+      return NextResponse.json({ players: allPlayers, season })
+    }
+
     const [hrLeaders, avgLeaders] = await Promise.all([
       getLeaders("hitting", "homeRuns", season, 8),
       getLeaders("hitting", "battingAverage", season, 8),

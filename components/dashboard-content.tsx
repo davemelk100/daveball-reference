@@ -148,12 +148,12 @@ export function DashboardContent({
       {/* Hero Section */}
       <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
+          <h1 className="mb-2">
             Major League Numbers
           </h1>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <TriviaCard />
+          <p className="text-muted-foreground text-lg">
+            An easier way to search MLB history
+          </p>
         </div>
       </div>
 
