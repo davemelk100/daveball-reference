@@ -66,7 +66,7 @@ const PlayerSpotlight = dynamic(
 
 interface LeagueLeader {
   value: string | number;
-  person?: { fullName: string };
+  person?: { id: number; fullName: string };
 }
 
 interface DashboardData {
@@ -145,6 +145,7 @@ export function DashboardContent({
         league: selectedLeague,
         value: leader?.value || "—",
         name: leader?.person?.fullName || "No data",
+        playerId: leader?.person?.id,
       },
     ];
   };

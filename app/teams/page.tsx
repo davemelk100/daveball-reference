@@ -31,14 +31,7 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
     <div className="space-y-10">
       {divisions.map(([divisionName, divTeams]) => (
         <section key={divisionName}>
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                divisionName.includes("American")
-                  ? "bg-blue-500"
-                  : "bg-green-500"
-              }`}
-            />
+          <h2 className="text-xl font-semibold mb-4">
             {divisionName}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
