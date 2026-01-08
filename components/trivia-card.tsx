@@ -148,11 +148,19 @@ function TriviaCardContent() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2 border-primary/20 hover:bg-primary/20 hover:text-black dark:hover:text-white bg-transparent">
-          <HelpCircle className="h-4 w-4 text-primary" />
+        <Button
+          variant={totalAnswered > 0 ? "outline" : "default"}
+          className={cn(
+            "gap-2 font-semibold",
+            totalAnswered > 0
+              ? "border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary"
+              : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+          )}
+        >
+          <HelpCircle className="h-4 w-4" />
           <span>Daily Trivia</span>
           {totalAnswered > 0 && (
-            <Badge variant="secondary" className="ml-1 text-xs">
+            <Badge variant="secondary" className="ml-1 text-xs bg-primary/20 text-primary">
               {totalCorrect}/5
             </Badge>
           )}
@@ -286,7 +294,7 @@ function TriviaCardContent() {
 
 export function TriviaCard() {
   return (
-    <Suspense fallback={<Button variant="outline" disabled className="gap-2 border-primary/20 bg-transparent"><HelpCircle className="h-4 w-4 text-primary" /> Loading Trivia...</Button>}>
+    <Suspense fallback={<Button variant="default" disabled className="gap-2 font-semibold bg-primary/70 text-primary-foreground shadow-md"><HelpCircle className="h-4 w-4" /> Loading Trivia...</Button>}>
       <TriviaCardContent />
     </Suspense>
   )
