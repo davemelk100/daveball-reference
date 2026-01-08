@@ -212,7 +212,7 @@ function TriviaCardContent() {
                   variant="outline"
                   size="sm"
                   className={cn(
-                    "justify-start h-auto py-2 px-3 text-left text-sm",
+                    "justify-start h-auto py-2 px-3 text-left text-sm whitespace-normal",
                     (currentAnswered || showYesterday) && isCorrectAnswer && "border-green-500 bg-green-500/10",
                     !showYesterday && currentAnswered && isSelected && !isCorrectAnswer && "border-red-500 bg-red-500/10",
                     !currentAnswered && !showYesterday && "hover:bg-muted",
@@ -220,10 +220,10 @@ function TriviaCardContent() {
                   onClick={() => handleAnswer(index)}
                   disabled={!!currentAnswered || showYesterday}
                 >
-                  <span className="flex items-center gap-2">
-                    {((currentAnswered || showYesterday) && isCorrectAnswer) && <CheckCircle2 className="h-3 w-3 text-green-500" />}
-                    {(!showYesterday && currentAnswered && isSelected && !isCorrectAnswer) && <XCircle className="h-3 w-3 text-red-500" />}
-                    {option}
+                  <span className="flex items-start gap-2">
+                    {((currentAnswered || showYesterday) && isCorrectAnswer) && <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0 mt-0.5" />}
+                    {(!showYesterday && currentAnswered && isSelected && !isCorrectAnswer) && <XCircle className="h-3 w-3 text-red-500 flex-shrink-0 mt-0.5" />}
+                    <span className="break-words">{option}</span>
                   </span>
                 </Button>
               )
