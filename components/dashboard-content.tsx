@@ -44,15 +44,7 @@ const TriviaCard = dynamic(
   }
 );
 
-const DailyFact = dynamic(
-  () =>
-    import("@/components/daily-fact").then((mod) => ({
-      default: mod.DailyFact,
-    })),
-  {
-    loading: () => <Skeleton className="h-[80px] w-full" />,
-  }
-);
+
 
 const PlayerSpotlight = dynamic(
   () =>
@@ -161,11 +153,11 @@ export function DashboardContent({
           </h1>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <DailyFact />
-          <PlayerSpotlight />
           <TriviaCard />
         </div>
       </div>
+
+      <PlayerSpotlight />
 
       {/* Season Card */}
       <div className="mb-4">

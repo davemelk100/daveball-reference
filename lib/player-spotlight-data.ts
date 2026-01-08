@@ -251,6 +251,38 @@ export const spotlightPlayers: SpotlightPlayer[] = [
     years: "2016-present",
     fact: "Set the AL single-season home run record with 62 in 2022, breaking Roger Maris's 61-year-old mark.",
   },
+  {
+    id: 493316,
+    name: "Steve Pearce",
+    position: "1B/OF",
+    team: "Multiple",
+    years: "2007-2019",
+    fact: "Won the 2018 World Series MVP with the Red Sox, playing for every AL East team during his career.",
+  },
+  {
+    id: 456030,
+    name: "Dustin Ackley",
+    position: "2B/OF",
+    team: "Mariners/Yankees",
+    years: "2011-2016",
+    fact: "Second overall pick in the 2009 draft who had a brief but memorable career with the Mariners and Yankees.",
+  },
+  {
+    id: 460075,
+    name: "Ryan Ryan",
+    position: "P",
+    team: "Multiple",
+    years: "1998-2003",
+    fact: "A journeyman pitcher who appeared in 6 games over 5 seasons for 3 different teams.",
+  },
+  {
+    id: 444432,
+    name: "Mark Reynolds",
+    position: "1B/3B",
+    team: "Multiple",
+    years: "2007-2019",
+    fact: "Hit 298 career home runs but also struck out 223 times in 2009, setting a single-season record.",
+  },
 ]
 
 export function getDailyPlayer(): SpotlightPlayer {

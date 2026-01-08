@@ -16,6 +16,7 @@ interface AnsweredQuestion {
 }
 
 export function TriviaCard() {
+  const [quizDate, setQuizDate] = useState<Date | null>(null)
   const [dailyQuestions, setDailyQuestions] = useState<TriviaQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([])
@@ -24,10 +25,14 @@ export function TriviaCard() {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    const questions = getDailyTriviaQuestions()
+    // Set the quiz date once on mount to avoid issues if usage crosses midnight
+    const now = new Date()
+    setQuizDate(now)
+
+    const questions = getDailyTriviaQuestions(now)
     setDailyQuestions(questions)
 
-    const storageKey = getTodayStorageKey()
+    const storageKey = getTodayStorageKey(now)
     const stored = localStorage.getItem(storageKey)
     if (stored) {
       const parsed = JSON.parse(stored) as AnsweredQuestion[]
@@ -45,8 +50,8 @@ export function TriviaCard() {
 
     const updateCountdown = () => {
       const next = getNextTriviaTime()
-      const now = new Date()
-      const diff = next.getTime() - now.getTime()
+      const currentTime = new Date()
+      const diff = next.getTime() - currentTime.getTime()
       const hours = Math.floor(diff / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       setTimeUntilNext(`${hours}h ${minutes}m`)
@@ -79,7 +84,7 @@ export function TriviaCard() {
       setIsComplete(true)
     }
 
-    const storageKey = getTodayStorageKey()
+    const storageKey = getTodayStorageKey(quizDate!)
     localStorage.setItem(storageKey, JSON.stringify(updated))
   }
 
@@ -92,7 +97,7 @@ export function TriviaCard() {
   const handleShare = async () => {
     const score = answeredQuestions.filter(a => a.isCorrect).length
     const date = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
-    const text = `I got ${score}/5 on today's (${date}) Major League Numbers trivia! ⚾\n\nPlay here: https://daveball-reference.vercel.app`
+    const text = `I got ${score}/5 on today's (${date}) Major League Numbers trivia! ⚾\n\nPlay here: https://majorleaguenumbers.com`
 
     if (navigator.share) {
       try {

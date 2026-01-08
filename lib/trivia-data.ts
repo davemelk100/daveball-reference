@@ -854,8 +854,8 @@ export const triviaQuestions: TriviaQuestion[] = [
   },
 ]
 
-export function getDailyTriviaQuestions(): TriviaQuestion[] {
-  const now = new Date()
+export function getDailyTriviaQuestions(date?: Date): TriviaQuestion[] {
+  const now = date || new Date()
   // Create a seed based on the current date (changes daily at midnight)
   const dateSeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate()
 
@@ -883,8 +883,8 @@ export function getDailyTriviaQuestions(): TriviaQuestion[] {
   return selectedIndices.map((i) => triviaQuestions[i])
 }
 
-export function getTodayStorageKey(): string {
-  const now = new Date()
+export function getTodayStorageKey(date?: Date): string {
+  const now = date || new Date()
   return `trivia-${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 }
 
