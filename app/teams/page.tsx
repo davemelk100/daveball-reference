@@ -1,20 +1,22 @@
-import type { Metadata } from "next"
-import { Suspense } from "react"
-import { getTeams, getDefaultSeason } from "@/lib/mlb-api"
-import type { Team } from "@/lib/mlb-api"
-import { Skeleton } from "@/components/ui/skeleton"
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { getTeams, getDefaultSeason } from "@/lib/mlb-api";
+import type { Team } from "@/lib/mlb-api";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const revalidate = 3600
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "MLB Teams",
-  description: "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
+  description:
+    "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
   alternates: {
     canonical: "/teams",
   },
   openGraph: {
     title: "MLB Teams - All 30 Teams",
-    description: "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
+    description:
+      "Browse all 30 Major League Baseball teams organized by division. View rosters, stats, and team history.",
     type: "website",
   },
   twitter: {
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
     title: "MLB Teams",
     description: "Browse all 30 MLB teams by division with rosters and stats.",
   },
-}
+};
 
 function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
   return (
@@ -31,7 +33,11 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
         <section key={divisionName}>
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span
-              className={`h-2 w-2 rounded-full ${divisionName.includes("American") ? "bg-blue-500" : "bg-green-500"}`}
+              className={`h-2 w-2 rounded-full ${
+                divisionName.includes("American")
+                  ? "bg-blue-500"
+                  : "bg-green-500"
+              }`}
             />
             {divisionName}
           </h2>
@@ -49,7 +55,9 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
                     />
                     <div>
                       <p className="font-medium">{team.name}</p>
-                      <p className="text-sm text-muted-foreground">{team.abbreviation}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {team.abbreviation}
+                      </p>
                     </div>
                   </div>
                 </a>
@@ -58,7 +66,7 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
         </section>
       ))}
     </div>
-  )
+  );
 }
 
 function TeamsGridSkeleton() {
@@ -75,31 +83,31 @@ function TeamsGridSkeleton() {
         </section>
       ))}
     </div>
-  )
+  );
 }
 
 async function TeamsContent() {
-  const defaultSeason = getDefaultSeason()
-  const teams = await getTeams(defaultSeason)
+  const defaultSeason = getDefaultSeason();
+  const teams = await getTeams(defaultSeason);
 
   // Group teams by division
-  const divisions: Record<string, Team[]> = {}
+  const divisions: Record<string, Team[]> = {};
   teams.forEach((team) => {
-    const divName = team.division?.name || "Other"
-    if (!divisions[divName]) divisions[divName] = []
-    divisions[divName].push(team)
-  })
+    const divName = team.division?.name || "Other";
+    if (!divisions[divName]) divisions[divName] = [];
+    divisions[divName].push(team);
+  });
 
   // Sort divisions by league then name
   const sortedDivisions = Object.entries(divisions).sort(([a], [b]) => {
-    const aIsAL = a.includes("American")
-    const bIsAL = b.includes("American")
-    if (aIsAL && !bIsAL) return -1
-    if (!aIsAL && bIsAL) return 1
-    return a.localeCompare(b)
-  })
+    const aIsAL = a.includes("American");
+    const bIsAL = b.includes("American");
+    if (aIsAL && !bIsAL) return -1;
+    if (!aIsAL && bIsAL) return 1;
+    return a.localeCompare(b);
+  });
 
-  return <TeamGrid divisions={sortedDivisions} />
+  return <TeamGrid divisions={sortedDivisions} />;
 }
 
 export default function TeamsPage() {
@@ -107,12 +115,11 @@ export default function TeamsPage() {
     <main className="container py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">MLB Teams</h1>
-        <p className="text-muted-foreground mt-1">Browse all Major League Baseball teams by division</p>
       </div>
 
       <Suspense fallback={<TeamsGridSkeleton />}>
         <TeamsContent />
       </Suspense>
     </main>
-  )
+  );
 }
