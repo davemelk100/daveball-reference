@@ -148,7 +148,16 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           />
         </div>
         <div className="flex-1">
-          <h1 className="">{team.name}</h1>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/mln-logo.png"
+              alt="MLN Logo"
+              width={60}
+              height={60}
+              className="h-10 w-auto object-contain"
+            />
+            <h1 className="mb-0">{team.name}</h1>
+          </div>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
           </p>

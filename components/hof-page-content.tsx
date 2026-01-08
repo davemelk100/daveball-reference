@@ -45,7 +45,16 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <h1 className="mb-4">Hall of Fame</h1>
+        <div className="flex items-center gap-3 mb-4">
+          <Image
+            src="/mln-logo.png"
+            alt="MLN Logo"
+            width={100}
+            height={100}
+            className="h-16 md:h-20 w-auto object-contain"
+          />
+          <h1 className="mb-0">Hall of Fame</h1>
+        </div>
       </div>
 
       {/* Year Selector */}

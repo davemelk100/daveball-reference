@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { StandingsTable } from "@/components/standings-table";
+import Image from "next/image";
 import { SeasonSelector } from "@/components/season-selector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, AlertCircle } from "lucide-react";
@@ -64,9 +65,16 @@ export function StandingsPageContent({
     <main className="container py-8">
       <div className="mb-8">
         <div className="mb-4">
-          <h1 className="mb-2">
-            MLB Standings
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <Image
+              src="/mln-logo.png"
+              alt="MLN Logo"
+              width={100}
+              height={100}
+              className="h-16 md:h-20 w-auto object-contain"
+            />
+            <h1 className="mb-0">MLB Standings</h1>
+          </div>
         </div>
         <div>
           <SeasonSelector season={season} onSeasonChange={setSeason} />

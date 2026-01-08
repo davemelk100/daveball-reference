@@ -64,9 +64,16 @@ export function AllStarPageContent({ initialSeason, rosters }: AllStarPageConten
         <main className="container py-8">
             <div className="mb-8">
                 <div className="mb-4">
-                    <h1 className="mb-2">
-                        All-Star Game Rosters
-                    </h1>
+                    <div className="flex items-center gap-3 mb-2">
+                        <Image
+                            src="/mln-logo.png"
+                            alt="MLN Logo"
+                            width={100}
+                            height={100}
+                            className="h-20 md:h-24 w-auto object-contain"
+                        />
+                        <h1 className="mb-0">All-Star Game Rosters</h1>
+                    </div>
                 </div>
                 <div>
                     <SeasonSelector season={initialSeason} onSeasonChange={handleSeasonChange} isLoading={isPending} startYear={1933} />

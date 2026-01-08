@@ -30,11 +30,11 @@ export function Header() {
         <div className="flex items-center gap-4 lg:gap-8 min-w-0">
           <Link href="/" className="flex-shrink-0 border-0">
             <Image
-              src="/mln-logo.png"
+              src="/mln-header.png"
               alt="Major League Numbers Logo"
               width={161}
               height={100}
-              className="w-[50px] lg:w-[130px] h-auto object-contain border-0"
+              className="w-[32px] lg:w-[65px] h-auto object-contain border-0"
             />
           </Link>
           <nav className="hidden xl:flex items-center gap-1">

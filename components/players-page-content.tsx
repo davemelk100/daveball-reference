@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Suspense } from "react";
 import { PlayerSearch } from "@/components/player-search";
+import Image from "next/image";
 import { PlayerCard } from "@/components/player-card";
 import { SeasonSelector } from "@/components/season-selector";
 import { Button } from "@/components/ui/button";
@@ -95,7 +96,16 @@ export function PlayersPageContent({
     <main className="container py-8">
       <div className="mb-8">
         <div className="mb-4">
-          <h1 className="mb-2">Players</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <Image
+              src="/mln-logo.png"
+              alt="MLN Logo"
+              width={60}
+              height={60}
+              className="h-10 w-auto object-contain"
+            />
+            <h1 className="mb-0">Players</h1>
+          </div>
         </div>
         <div className="mb-6">
           <SeasonSelector season={season} onSeasonChange={setSeason} />

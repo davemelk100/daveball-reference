@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getDailyTriviaQuestions, getNextTriviaTime, getTodayStorageKey, type TriviaQuestion } from "@/lib/trivia-data"
-import { HelpCircle, CheckCircle2, XCircle, Clock, ChevronLeft, ChevronRight, Share2 } from "lucide-react"
+import { HelpCircle, CheckCircle2, XCircle, ChevronLeft, ChevronRight, Share2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface AnsweredQuestion {
@@ -21,7 +21,7 @@ function TriviaCardContent() {
   const [dailyQuestions, setDailyQuestions] = useState<TriviaQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([])
-  const [timeUntilNext, setTimeUntilNext] = useState("")
+
   const [isComplete, setIsComplete] = useState(false)
   const [showYesterday, setShowYesterday] = useState(false)
   const [yesterdayQuestions, setYesterdayQuestions] = useState<TriviaQuestion[]>([])
@@ -65,18 +65,6 @@ function TriviaCardContent() {
       }
     }
 
-    const updateCountdown = () => {
-      const next = getNextTriviaTime()
-      const currentTime = new Date()
-      const diff = next.getTime() - currentTime.getTime()
-      const hours = Math.floor(diff / (1000 * 60 * 60))
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      setTimeUntilNext(`${hours}h ${minutes}m`)
-    }
-
-    updateCountdown()
-    const interval = setInterval(updateCountdown, 60000)
-    return () => clearInterval(interval)
   }, [])
 
   const currentQuestion = showYesterday ? yesterdayQuestions[currentIndex] : dailyQuestions[currentIndex]
@@ -162,43 +150,31 @@ function TriviaCardContent() {
           <span>Daily Trivia</span>
           {totalAnswered > 0 && (
             <Badge variant="secondary" className="ml-1 text-xs bg-primary/20 text-primary">
-              {totalCorrect}/5
+              Today: {totalCorrect}/5
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">{currentIndex + 1} of 5</span>
-            {!showYesterday && (
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Clock className="h-3 w-3" />
-                New in {timeUntilNext}
-              </span>
-            )}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-semibold text-primary uppercase tracking-wider">Daily Trivia</h3>
+            </div>
+            <Button
+              variant="link"
+              size="sm"
+              className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary p-0 h-auto justify-start"
+              onClick={() => {
+                setShowYesterday(!showYesterday)
+                setCurrentIndex(0)
+              }}
+            >
+              {showYesterday ? "Back to Today" : "Yesterday's Answers"}
+            </Button>
           </div>
 
-          <div className="flex justify-center gap-1.5">
-            {questionsToLink.map((q, i) => {
-              const answered = answeredQuestions.find((a) => a.questionId === q.id)
-              return (
-                <button
-                  key={q.id}
-                  onClick={() => setCurrentIndex(i)}
-                  className={cn(
-                    "w-2 h-2 rounded-full transition-colors",
-                    i === currentIndex && "ring-2 ring-primary ring-offset-1 ring-offset-background",
-                    showYesterday ? "bg-primary/40" : (
-                      answered?.isCorrect ? "bg-green-500" :
-                        answered && !answered.isCorrect ? "bg-red-500" :
-                          "bg-muted-foreground/30"
-                    )
-                  )}
-                />
-              )
-            })}
-          </div>
+
 
           <p className="font-medium text-sm">{currentQuestion.question}</p>
 
@@ -256,17 +232,7 @@ function TriviaCardContent() {
               Prev
             </Button>
 
-            <Button
-              variant="link"
-              size="sm"
-              className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary p-0 h-auto"
-              onClick={() => {
-                setShowYesterday(!showYesterday)
-                setCurrentIndex(0)
-              }}
-            >
-              {showYesterday ? "Back to Today" : "Yesterday's Answers"}
-            </Button>
+            <span className="text-xs text-muted-foreground font-medium">{currentIndex + 1} of 5</span>
 
             {currentIndex < 4 ? (
               <Button variant="ghost" size="sm" onClick={goToNext} className="gap-1">
@@ -306,7 +272,7 @@ function TriviaPanelContent() {
   const [dailyQuestions, setDailyQuestions] = useState<TriviaQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([])
-  const [timeUntilNext, setTimeUntilNext] = useState("")
+
   const [isComplete, setIsComplete] = useState(false)
   const [showYesterday, setShowYesterday] = useState(false)
   const [yesterdayQuestions, setYesterdayQuestions] = useState<TriviaQuestion[]>([])
@@ -338,18 +304,6 @@ function TriviaPanelContent() {
       }
     }
 
-    const updateCountdown = () => {
-      const next = getNextTriviaTime()
-      const currentTime = new Date()
-      const diff = next.getTime() - currentTime.getTime()
-      const hours = Math.floor(diff / (1000 * 60 * 60))
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      setTimeUntilNext(`${hours}h ${minutes}m`)
-    }
-
-    updateCountdown()
-    const interval = setInterval(updateCountdown, 60000)
-    return () => clearInterval(interval)
   }, [])
 
   const currentQuestion = showYesterday ? yesterdayQuestions[currentIndex] : dailyQuestions[currentIndex]
@@ -420,57 +374,44 @@ function TriviaPanelContent() {
 
   return (
     <div className="w-full h-full bg-muted/30 rounded-lg border p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-semibold text-primary uppercase tracking-wider">Daily Trivia</h2>
-          {isComplete && (
-            <Badge variant="secondary" className="ml-1 text-xs bg-primary/20 text-primary">
-              {totalCorrect}/5
-            </Badge>
-          )}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-semibold text-primary uppercase tracking-wider">Daily Trivia</h2>
+            {isComplete && (
+              <Badge variant="secondary" className="ml-1 text-xs bg-primary/20 text-primary">
+                Today: {totalCorrect}/5
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {!showYesterday && isComplete && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShare}
+                className="gap-1 h-7 text-xs"
+              >
+                <Share2 className="h-3 w-3" />
+                Share
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          {!showYesterday && isComplete && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="gap-1 h-7 text-xs"
-            >
-              <Share2 className="h-3 w-3" />
-              Share
-            </Button>
-          )}
-          <span className="text-xs text-muted-foreground">{currentIndex + 1} of 5</span>
-          {!showYesterday && (
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              New in {timeUntilNext}
-            </span>
-          )}
-        </div>
+        <Button
+          variant="link"
+          size="sm"
+          className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary p-0 h-auto justify-start"
+          onClick={() => {
+            setShowYesterday(!showYesterday)
+            setCurrentIndex(0)
+          }}
+        >
+          {showYesterday ? "Back to Today" : "Yesterday's Answers"}
+        </Button>
       </div>
 
-      <div className="flex justify-center gap-1.5">
-        {questionsToLink.map((q, i) => {
-          const answered = answeredQuestions.find((a) => a.questionId === q.id)
-          return (
-            <button
-              key={q.id}
-              onClick={() => setCurrentIndex(i)}
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors",
-                i === currentIndex && "ring-2 ring-primary ring-offset-1 ring-offset-background",
-                showYesterday ? "bg-primary/40" : (
-                  answered?.isCorrect ? "bg-green-500" :
-                    answered && !answered.isCorrect ? "bg-red-500" :
-                      "bg-muted-foreground/30"
-                )
-              )}
-            />
-          )
-        })}
-      </div>
+
 
       <p className="font-medium text-sm">{currentQuestion.question}</p>
 
@@ -528,17 +469,7 @@ function TriviaPanelContent() {
           Prev
         </Button>
 
-        <Button
-          variant="link"
-          size="sm"
-          className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary p-0 h-auto"
-          onClick={() => {
-            setShowYesterday(!showYesterday)
-            setCurrentIndex(0)
-          }}
-        >
-          {showYesterday ? "Back to Today" : "Yesterday's Answers"}
-        </Button>
+        <span className="text-xs text-muted-foreground font-medium">{currentIndex + 1} of 5</span>
 
         {currentIndex < 4 ? (
           <Button variant="ghost" size="sm" onClick={goToNext} className="gap-1">

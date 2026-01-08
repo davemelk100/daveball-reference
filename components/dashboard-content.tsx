@@ -2,6 +2,7 @@
 
 import { useState, Suspense, lazy } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { StatCard } from "@/components/stat-card";
 import { LeadersTable } from "@/components/leaders-table";
 import { SeasonSelector } from "@/components/season-selector";
@@ -145,9 +146,16 @@ export function DashboardContent({
   return (
     <main className="container py-8">
       {/* Hero Section */}
-      <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-        <div>
-          <h1 className="mb-2">Major League Numbers</h1>
+      <div className="mb-8 flex items-center gap-4">
+        <Image
+          src="/mln-logo.png"
+          alt="MLN Logo"
+          width={120}
+          height={120}
+          className="h-16 md:h-24 w-auto object-contain"
+        />
+        <div className="flex flex-col">
+          <h1 className="mb-0">Major League Numbers</h1>
           <p className="text-muted-foreground text-lg">
             The simplest way to search MLB history.
           </p>
