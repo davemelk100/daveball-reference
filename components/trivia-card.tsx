@@ -23,6 +23,8 @@ function TriviaCardContent() {
   const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([])
   const [timeUntilNext, setTimeUntilNext] = useState("")
   const [isComplete, setIsComplete] = useState(false)
+  const [showYesterday, setShowYesterday] = useState(false)
+  const [yesterdayQuestions, setYesterdayQuestions] = useState<TriviaQuestion[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
   const searchParams = useSearchParams()
@@ -41,6 +43,11 @@ function TriviaCardContent() {
 
     const questions = getDailyTriviaQuestions(now)
     setDailyQuestions(questions)
+
+    // Fetch yesterday's questions
+    const yesterday = new Date(now)
+    yesterday.setDate(yesterday.getDate() - 1)
+    setYesterdayQuestions(getDailyTriviaQuestions(yesterday))
 
     const storageKey = getTodayStorageKey(now)
     const stored = localStorage.getItem(storageKey)
@@ -72,13 +79,13 @@ function TriviaCardContent() {
     return () => clearInterval(interval)
   }, [])
 
-  const currentQuestion = dailyQuestions[currentIndex]
+  const currentQuestion = showYesterday ? yesterdayQuestions[currentIndex] : dailyQuestions[currentIndex]
   const currentAnswered = answeredQuestions.find((a) => a.questionId === currentQuestion?.id)
   const totalAnswered = answeredQuestions.length
   const totalCorrect = answeredQuestions.filter((a) => a.isCorrect).length
 
   const handleAnswer = (index: number) => {
-    if (currentAnswered || !currentQuestion) return
+    if (showYesterday || currentAnswered || !currentQuestion) return
 
     const isCorrect = index === currentQuestion.correctAnswer
     const newAnswered: AnsweredQuestion = {
@@ -136,13 +143,7 @@ function TriviaCardContent() {
 
   if (!currentQuestion) return null
 
-  const categoryColors: Record<string, string> = {
-    history: "bg-amber-500/20 text-amber-400",
-    records: "bg-blue-500/20 text-blue-400",
-    players: "bg-green-500/20 text-green-400",
-    teams: "bg-purple-500/20 text-purple-400",
-    rules: "bg-red-500/20 text-red-400",
-  }
+  const questionsToLink = showYesterday ? yesterdayQuestions : dailyQuestions
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -160,20 +161,17 @@ function TriviaCardContent() {
       <PopoverContent className="w-80 p-0" align="end">
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className={categoryColors[currentQuestion.category]}>
-                {currentQuestion.category}
-              </Badge>
-              <span className="text-xs text-muted-foreground">{currentIndex + 1} of 5</span>
-            </div>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              New in {timeUntilNext}
-            </span>
+            <span className="text-xs text-muted-foreground">{currentIndex + 1} of 5</span>
+            {!showYesterday && (
+              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                New in {timeUntilNext}
+              </span>
+            )}
           </div>
 
           <div className="flex justify-center gap-1.5">
-            {dailyQuestions.slice(0, 5).map((q, i) => {
+            {questionsToLink.map((q, i) => {
               const answered = answeredQuestions.find((a) => a.questionId === q.id)
               return (
                 <button
@@ -182,9 +180,11 @@ function TriviaCardContent() {
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors",
                     i === currentIndex && "ring-2 ring-primary ring-offset-1 ring-offset-background",
-                    answered?.isCorrect && "bg-green-500",
-                    answered && !answered.isCorrect && "bg-red-500",
-                    !answered && "bg-muted-foreground/30",
+                    showYesterday ? "bg-primary/40" : (
+                      answered?.isCorrect ? "bg-green-500" :
+                        answered && !answered.isCorrect ? "bg-red-500" :
+                          "bg-muted-foreground/30"
+                    )
                   )}
                 />
               )
@@ -205,16 +205,16 @@ function TriviaCardContent() {
                   size="sm"
                   className={cn(
                     "justify-start h-auto py-2 px-3 text-left text-sm",
-                    currentAnswered && isCorrectAnswer && "border-green-500 bg-green-500/10",
-                    currentAnswered && isSelected && !isCorrectAnswer && "border-red-500 bg-red-500/10",
-                    !currentAnswered && "hover:bg-muted",
+                    (currentAnswered || showYesterday) && isCorrectAnswer && "border-green-500 bg-green-500/10",
+                    !showYesterday && currentAnswered && isSelected && !isCorrectAnswer && "border-red-500 bg-red-500/10",
+                    !currentAnswered && !showYesterday && "hover:bg-muted",
                   )}
                   onClick={() => handleAnswer(index)}
-                  disabled={!!currentAnswered}
+                  disabled={!!currentAnswered || showYesterday}
                 >
                   <span className="flex items-center gap-2">
-                    {currentAnswered && isCorrectAnswer && <CheckCircle2 className="h-3 w-3 text-green-500" />}
-                    {currentAnswered && isSelected && !isCorrectAnswer && <XCircle className="h-3 w-3 text-red-500" />}
+                    {((currentAnswered || showYesterday) && isCorrectAnswer) && <CheckCircle2 className="h-3 w-3 text-green-500" />}
+                    {(!showYesterday && currentAnswered && isSelected && !isCorrectAnswer) && <XCircle className="h-3 w-3 text-red-500" />}
                     {option}
                   </span>
                 </Button>
@@ -222,18 +222,21 @@ function TriviaCardContent() {
             })}
           </div>
 
-          {currentAnswered && (
+          {(currentAnswered || showYesterday) && (
             <div
               className={cn(
                 "p-2 rounded-lg text-xs",
-                currentAnswered.isCorrect ? "bg-green-500/10 text-green-400" : "bg-muted",
+                (currentAnswered?.isCorrect || showYesterday) ? "bg-green-500/10 text-green-400" : "bg-muted",
               )}
             >
-              {currentAnswered.isCorrect ? (
-                <p className="font-medium">Correct!</p>
-              ) : (
-                <p className="font-medium text-red-400">Not quite!</p>
+              {!showYesterday && (
+                currentAnswered?.isCorrect ? (
+                  <p className="font-medium">Correct!</p>
+                ) : (
+                  <p className="font-medium text-red-400">Not quite!</p>
+                )
               )}
+              {showYesterday && <p className="font-medium text-green-400">Correct Answer:</p>}
               <p className="mt-1 text-muted-foreground">{currentQuestion.explanation}</p>
             </div>
           )}
@@ -243,13 +246,25 @@ function TriviaCardContent() {
               <ChevronLeft className="h-4 w-4" />
               Prev
             </Button>
-            <span className="text-xs text-muted-foreground">{totalCorrect} of 5 correct</span>
+
+            <Button
+              variant="link"
+              size="sm"
+              className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary p-0 h-auto"
+              onClick={() => {
+                setShowYesterday(!showYesterday)
+                setCurrentIndex(0)
+              }}
+            >
+              {showYesterday ? "Back to Today" : "Yesterday's Answers"}
+            </Button>
+
             {currentIndex < 4 ? (
               <Button variant="ghost" size="sm" onClick={goToNext} className="gap-1">
                 Next
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            ) : isComplete ? (
+            ) : (!showYesterday && isComplete) ? (
               <Button
                 variant="ghost"
                 size="sm"

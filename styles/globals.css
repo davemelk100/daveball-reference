@@ -195,6 +195,14 @@
   p {
     font-size: 1rem;
   }
+
+  h1 {
+    font-family: var(--font-league-gothic), sans-serif !important;
+    font-size: 48px !important;
+    letter-spacing: 1px !important;
+    font-weight: 400 !important;
+    text-transform: uppercase !important;
+  }
 }
 
 /* Add custom container with equal horizontal padding */
