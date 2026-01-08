@@ -108,7 +108,8 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
                             alt={member.playerName}
                             width={75}
                             height={75}
-                            className="h-[75px] w-auto rounded-lg shrink-0"
+                            style={{ width: 'auto', height: '75px' }}
+                            className="rounded-lg shrink-0"
                           />
                           <div className="flex-1 min-w-0">
                             <p className="font-medium truncate">{member.playerName}</p>

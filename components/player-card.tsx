@@ -20,7 +20,8 @@ export function PlayerCard({ player }: PlayerCardProps) {
                 alt={player.fullName}
                 width={60}
                 height={60}
-                className="h-[65px] w-auto rounded-lg"
+                style={{ width: 'auto', height: '65px' }}
+                className="rounded-lg"
               />
             </div>
             <div className="flex-1 min-w-0">

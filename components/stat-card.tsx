@@ -68,7 +68,8 @@ export function StatCard({ title, value, description, leaders, icon: Icon, trend
                           alt={leader.name}
                           width={75}
                           height={75}
-                          className="h-[75px] w-auto rounded-lg"
+                          style={{ width: 'auto', height: '75px' }}
+                          className="rounded-lg"
                         />
                       </div>
                       <div className="flex-1 min-w-0">

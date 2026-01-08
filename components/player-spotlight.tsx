@@ -56,7 +56,8 @@ export function PlayerSpotlight() {
               alt={player.name}
               width={120}
               height={120}
-              className="h-[120px] w-auto rounded-xl transition-transform group-hover:scale-105"
+              style={{ width: 'auto', height: '120px' }}
+              className="rounded-xl transition-transform group-hover:scale-105"
               onError={() => setImageError(true)}
             />
           ) : (
