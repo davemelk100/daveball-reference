@@ -44,34 +44,38 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
 
   return (
     <main className="container py-8">
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Image
-            src="/mln-logo.png"
-            alt="MLN Logo"
-            width={100}
-            height={100}
-            className="h-16 md:h-20 w-auto object-contain"
-          />
+      <div className="mb-8 flex items-center gap-4">
+        <Image
+          src="/mln-logo.png"
+          alt="MLN Logo"
+          width={120}
+          height={120}
+          className="h-16 md:h-24 w-auto object-contain"
+          priority
+        />
+        <div className="flex flex-col">
           <h1 className="mb-0">Hall of Fame</h1>
+          <p className="text-muted-foreground text-lg">
+            The simplest way to search MLB history.
+          </p>
         </div>
       </div>
 
       {/* Year Selector */}
-      <div className="mb-6">
+      <div className="mb-8 flex justify-start">
         <Select value={selectedYear} onValueChange={setSelectedYear}>
-          <Card className="w-full py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
-            <CardContent className="p-0 flex justify-center">
+          <div className="w-full py-3 cursor-pointer hover:bg-muted/5 transition-colors">
+            <div className="p-0 flex justify-start">
               <SelectTrigger className="w-auto border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
-                <div className="flex items-center gap-3">
-                  <span className="text-xl font-semibold text-[#4e6095]">Induction Year</span>
-                  <span className="text-xl font-bold border-b-2 border-foreground">
+                <div className="flex items-center gap-4">
+                  <span className="text-2xl md:text-3xl font-semibold text-[#4e6095]">Induction Year</span>
+                  <span className="text-2xl md:text-3xl font-bold border-b-2 border-foreground">
                     <SelectValue placeholder="All Years" />
                   </span>
                 </div>
               </SelectTrigger>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
           <SelectContent className="max-h-[300px]">
             <SelectItem value="all">All Years</SelectItem>
             {years.map((year) => (

@@ -25,7 +25,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-[80px] lg:h-[116px] items-center justify-between gap-4">
         <div className="flex items-center gap-4 lg:gap-8 min-w-0">
           <Link href="/" className="flex-shrink-0 border-0">
@@ -37,6 +37,9 @@ export function Header() {
               className="w-[32px] lg:w-[65px] h-auto object-contain border-0"
             />
           </Link>
+          <div className="hidden lg:block">
+            <HeaderSearch />
+          </div>
           <nav className="hidden xl:flex items-center gap-1">
             {navigation.map((item) => (
               <Link
@@ -56,8 +59,9 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2 lg:gap-4 shrink-0">
-          <HeaderSearch />
-
+          <div className="lg:hidden">
+            <HeaderSearch />
+          </div>
           <Button
             variant="ghost"
             size="icon"

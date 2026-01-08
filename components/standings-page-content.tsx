@@ -64,19 +64,23 @@ export function StandingsPageContent({
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <div className="mb-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Image
-              src="/mln-logo.png"
-              alt="MLN Logo"
-              width={100}
-              height={100}
-              className="h-16 md:h-20 w-auto object-contain"
-            />
+        <div className="flex items-center gap-4 mb-4">
+          <Image
+            src="/mln-logo.png"
+            alt="MLN Logo"
+            width={120}
+            height={120}
+            className="h-16 md:h-24 w-auto object-contain"
+            priority
+          />
+          <div className="flex flex-col">
             <h1 className="mb-0">MLB Standings</h1>
+            <p className="text-muted-foreground text-lg">
+              The simplest way to search MLB history.
+            </p>
           </div>
         </div>
-        <div>
+        <div className="flex justify-start">
           <SeasonSelector season={season} onSeasonChange={setSeason} />
         </div>
       </div>

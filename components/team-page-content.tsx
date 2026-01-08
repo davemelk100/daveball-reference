@@ -148,15 +148,21 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           />
         </div>
         <div className="flex-1">
-          <div className="flex items-center gap-3">
+          <div className="mb-4 flex items-center gap-4">
             <Image
               src="/mln-logo.png"
               alt="MLN Logo"
-              width={60}
-              height={60}
-              className="h-10 w-auto object-contain"
+              width={120}
+              height={120}
+              className="h-16 md:h-24 w-auto object-contain"
+              priority
             />
-            <h1 className="mb-0">{team.name}</h1>
+            <div className="flex flex-col">
+              <h1 className="mb-0">{team.name}</h1>
+              <p className="text-muted-foreground text-lg">
+                The simplest way to search MLB history.
+              </p>
+            </div>
           </div>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
@@ -165,7 +171,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         </div>
       </div>
 
-      <div className="mb-8 flex items-center gap-2">
+      <div className="mb-8 flex items-center justify-start gap-2">
         <SeasonSelector season={season} onSeasonChange={setSeason} />
         {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
       </div>

@@ -98,11 +98,26 @@ async function TeamsContent() {
   return <TeamGrid divisions={sortedDivisions} />;
 }
 
+import Image from "next/image";
+
 export default function TeamsPage() {
   return (
     <main className="container py-8">
-      <div className="mb-8">
-        <h1 className="">MLB Teams</h1>
+      <div className="mb-8 flex items-center gap-4">
+        <Image
+          src="/mln-logo.png"
+          alt="MLN Logo"
+          width={120}
+          height={120}
+          className="h-16 md:h-24 w-auto object-contain"
+          priority
+        />
+        <div className="flex flex-col">
+          <h1 className="mb-0">MLB Teams</h1>
+          <p className="text-muted-foreground text-lg">
+            The simplest way to search MLB history.
+          </p>
+        </div>
       </div>
 
       <Suspense fallback={<TeamsGridSkeleton />}>

@@ -59,12 +59,11 @@ function TeamDetailSkeleton() {
   return (
     <main className="container py-8">
       <Skeleton className="h-4 w-32 mb-6" />
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <Skeleton className="h-24 w-24 rounded-lg" />
+      <div className="flex items-center gap-4 mb-8">
+        <Skeleton className="h-16 md:h-24 w-24 rounded-lg" />
         <div className="flex-1 space-y-2">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-4 w-48" />
-          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-6 w-48" />
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">

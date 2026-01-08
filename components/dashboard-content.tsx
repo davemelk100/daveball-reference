@@ -153,6 +153,7 @@ export function DashboardContent({
           width={120}
           height={120}
           className="h-16 md:h-24 w-auto object-contain"
+          priority
         />
         <div className="flex flex-col">
           <h1 className="mb-0">Major League Numbers</h1>
@@ -169,7 +170,7 @@ export function DashboardContent({
       </div>
 
       {/* Season Card */}
-      <div className="mb-4">
+      <div className="mb-6 flex justify-start">
         <SeasonSelector
           season={season}
           onSeasonChange={setSeason}

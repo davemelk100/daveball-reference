@@ -28,19 +28,19 @@ export function SeasonSelector({ season, onSeasonChange, isLoading, startYear = 
 
   return (
     <Select value={season.toString()} onValueChange={(val) => onSeasonChange(Number.parseInt(val))}>
-      <Card className="w-full py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
-        <CardContent className="p-0 flex justify-center">
+      <div className="w-full py-3 cursor-pointer hover:bg-muted/5 transition-colors">
+        <div className="p-0 flex justify-start">
           <SelectTrigger className="w-auto border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
-            <div className="flex items-center gap-3">
-              <span className="text-xl font-semibold text-[#4e6095]">Season</span>
-              <span className="text-xl font-bold border-b-2 border-foreground">
+            <div className="flex items-center gap-4">
+              <span className="text-2xl md:text-3xl font-semibold text-[#4e6095]">Season</span>
+              <span className="text-2xl md:text-3xl font-bold border-b-2 border-foreground">
                 <SelectValue placeholder="Season" />
               </span>
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+              {isLoading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
             </div>
           </SelectTrigger>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
       <SelectContent className="max-h-[300px]">
         {seasons.map((year) => (
           <SelectItem key={year} value={year.toString()}>

@@ -118,7 +118,7 @@ export function HeaderSearch() {
       </div>
 
       {isOpen && results.length > 0 && (
-        <Card className="absolute top-full right-0 w-80 z-[60] max-h-[70vh] overflow-hidden border-t-0 rounded-t-none shadow-2xl glassmorphism animate-in fade-in slide-in-from-top-2 duration-200">
+        <Card className="absolute top-full left-0 w-80 z-[60] max-h-[70vh] overflow-hidden border-t-0 rounded-t-none shadow-2xl glassmorphism animate-in fade-in slide-in-from-top-2 duration-200">
           <CardContent className="p-0 overflow-auto max-h-[inherit] custom-scrollbar">
             {results.map((result, idx) => {
               const isPlayer = result.type === "player"
@@ -187,7 +187,7 @@ export function HeaderSearch() {
       )}
 
       {isOpen && query.length >= 2 && results.length === 0 && !isLoading && (
-        <Card className="absolute top-full right-0 w-80 z-[60] border-t-0 rounded-t-none shadow-xl glassmorphism">
+        <Card className="absolute top-full left-0 w-80 z-[60] border-t-0 rounded-t-none shadow-xl glassmorphism">
           <CardContent className="p-8 text-center text-muted-foreground text-sm">
             <Search className="h-8 w-8 mx-auto mb-2 opacity-20" />
             <p>No matches for "{query}"</p>

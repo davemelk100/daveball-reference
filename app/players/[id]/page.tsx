@@ -113,22 +113,28 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
             />
           </div>
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/mln-logo.png"
-                  alt="MLN Logo"
-                  width={60}
-                  height={60}
-                  className="h-10 w-auto object-contain"
-                />
-                <h1 className="mb-0">{player.fullName}</h1>
+            <div className="mb-4 flex items-center gap-4">
+              <Image
+                src="/mln-logo.png"
+                alt="MLN Logo"
+                width={120}
+                height={120}
+                className="h-16 md:h-24 w-auto object-contain"
+                priority
+              />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-3">
+                  <h1 className="mb-0 leading-tight">{player.fullName}</h1>
+                  {player.active && (
+                    <Badge variant="outline" className="border-green-500/50 text-green-500">
+                      Active
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-muted-foreground text-lg">
+                  The simplest way to search MLB history.
+                </p>
               </div>
-              {player.active && (
-                <Badge variant="outline" className="border-green-500/50 text-green-500">
-                  Active
-                </Badge>
-              )}
             </div>
             <p className="text-lg text-muted-foreground mb-4">
               {player.currentTeam?.name || "Free Agent"} • {player.primaryPosition?.name}
