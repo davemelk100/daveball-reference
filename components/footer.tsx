@@ -1,13 +1,18 @@
+import { ThemeToggle } from "@/components/theme-toggle"
+
 export function Footer() {
   return (
     <footer className="border-t border-border bg-muted/30 mt-auto">
       <div className="container py-6">
-        <p className="text-center text-sm text-muted-foreground">
-          Major League Numbers is not affiliated with, endorsed by, or sponsored by Major League Baseball (MLB) or its
-          teams. All MLB logos, trademarks, and data are the property of MLB and its respective teams. This site is an
-          independent fan project for informational purposes only.
-        </p>
-        <p className="text-center text-xs text-muted-foreground/60 mt-2">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+          <p className="text-sm text-muted-foreground max-w-2xl text-center md:text-left">
+            Major League Numbers is not affiliated with, endorsed by, or sponsored by Major League Baseball (MLB) or its
+            teams. All MLB logos, trademarks, and data are the property of MLB and its respective teams. This site is an
+            independent fan project for informational purposes only.
+          </p>
+          <ThemeToggle />
+        </div>
+        <p className="text-center text-xs text-muted-foreground/60">
           Powered by{" "}
           <a
             href="https://github.com/jldbc/pybaseball"

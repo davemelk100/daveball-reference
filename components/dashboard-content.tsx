@@ -155,9 +155,6 @@ export function DashboardContent({
             An easier way to search MLB history
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <TriviaCard />
-        </div>
       </div>
 
       <PlayerSpotlight />
