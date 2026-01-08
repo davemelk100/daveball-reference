@@ -64,7 +64,7 @@ export function AllStarPageContent({ initialSeason, rosters }: AllStarPageConten
         <main className="container py-8">
             <div className="mb-8">
                 <div className="mb-4">
-                    <h1 className="text-3xl font-bold tracking-tight mb-2">
+                    <h1 className="mb-2">
                         All-Star Game Rosters
                     </h1>
                 </div>

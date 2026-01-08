@@ -102,7 +102,7 @@ export default function TeamsPage() {
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">MLB Teams</h1>
+        <h1 className="">MLB Teams</h1>
       </div>
 
       <Suspense fallback={<TeamsGridSkeleton />}>

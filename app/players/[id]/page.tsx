@@ -94,110 +94,110 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       <main className="container py-8">
         {/* Back button */}
         <Button variant="ghost" size="sm" asChild className="mb-6">
-        <Link href="/players">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Players
-        </Link>
-      </Button>
+          <Link href="/players">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Players
+          </Link>
+        </Button>
 
-      {/* Player Header */}
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="shrink-0">
-          <Image
-            src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
-            alt={player.fullName}
-            width={120}
-            height={120}
-            className="h-[80px] md:h-[110px] w-auto rounded-lg"
-            priority
-          />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl md:text-4xl font-bold">{player.fullName}</h1>
-            {player.active && (
-              <Badge variant="outline" className="border-green-500/50 text-green-500">
-                Active
-              </Badge>
+        {/* Player Header */}
+        <div className="flex flex-col md:flex-row gap-6 mb-8">
+          <div className="shrink-0">
+            <Image
+              src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
+              alt={player.fullName}
+              width={120}
+              height={120}
+              className="h-[80px] md:h-[110px] w-auto rounded-lg"
+              priority
+            />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="">{player.fullName}</h1>
+              {player.active && (
+                <Badge variant="outline" className="border-green-500/50 text-green-500">
+                  Active
+                </Badge>
+              )}
+            </div>
+            <p className="text-lg text-muted-foreground mb-4">
+              {player.currentTeam?.name || "Free Agent"} • {player.primaryPosition?.name}
+            </p>
+            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <span>Age {player.currentAge}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Ruler className="h-4 w-4" />
+                <span>{player.height}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Scale className="h-4 w-4" />
+                <span>{player.weight} lbs</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                <span>
+                  {player.birthCity}, {player.birthCountry}
+                </span>
+              </div>
+            </div>
+            {allStarAppearances.length > 0 && (
+              <div className="mt-4 flex items-center gap-2">
+                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                <span className="font-medium">{allStarAppearances.length}x All-Star</span>
+                <span className="text-muted-foreground">
+                  ({allStarAppearances.map((a) => a.season).join(", ")})
+                </span>
+              </div>
             )}
           </div>
-          <p className="text-lg text-muted-foreground mb-4">
-            {player.currentTeam?.name || "Free Agent"} • {player.primaryPosition?.name}
-          </p>
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>Age {player.currentAge}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Ruler className="h-4 w-4" />
-              <span>{player.height}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Scale className="h-4 w-4" />
-              <span>{player.weight} lbs</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
-              <span>
-                {player.birthCity}, {player.birthCountry}
-              </span>
-            </div>
+        </div>
+
+        {/* Current Season Stats Quick View */}
+        {(currentHitting || currentPitching) && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">2024 Season</h2>
+            {isPitcher && currentPitching ? (
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+                <StatCard title="W-L" value={`${currentPitching.stat.wins || 0}-${currentPitching.stat.losses || 0}`} />
+                <StatCard title="ERA" value={currentPitching.stat.era || "—"} />
+                <StatCard title="IP" value={currentPitching.stat.inningsPitched || "—"} />
+                <StatCard title="K" value={currentPitching.stat.strikeOuts || "—"} />
+                <StatCard title="WHIP" value={currentPitching.stat.whip || "—"} />
+                <StatCard title="SV" value={currentPitching.stat.saves || "—"} />
+              </div>
+            ) : currentHitting ? (
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+                <StatCard title="AVG" value={currentHitting.stat.avg || "—"} />
+                <StatCard title="HR" value={currentHitting.stat.homeRuns || "—"} />
+                <StatCard title="RBI" value={currentHitting.stat.rbi || "—"} />
+                <StatCard title="OPS" value={currentHitting.stat.ops || "—"} />
+                <StatCard title="SB" value={currentHitting.stat.stolenBases || "—"} />
+                <StatCard title="H" value={currentHitting.stat.hits || "—"} />
+              </div>
+            ) : null}
           </div>
-          {allStarAppearances.length > 0 && (
-            <div className="mt-4 flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-              <span className="font-medium">{allStarAppearances.length}x All-Star</span>
-              <span className="text-muted-foreground">
-                ({allStarAppearances.map((a) => a.season).join(", ")})
-              </span>
-            </div>
+        )}
+
+        {/* Career Stats Tables */}
+        <div className="space-y-6">
+          {hittingStats.length > 0 && <PlayerStatsTable stats={hittingStats} type="hitting" />}
+          {pitchingStats.length > 0 && <PlayerStatsTable stats={pitchingStats} type="pitching" />}
+
+          {hittingStats.length === 0 && pitchingStats.length === 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Career Statistics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">No career statistics available for this player.</p>
+              </CardContent>
+            </Card>
           )}
         </div>
-      </div>
-
-      {/* Current Season Stats Quick View */}
-      {(currentHitting || currentPitching) && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">2024 Season</h2>
-          {isPitcher && currentPitching ? (
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-              <StatCard title="W-L" value={`${currentPitching.stat.wins || 0}-${currentPitching.stat.losses || 0}`} />
-              <StatCard title="ERA" value={currentPitching.stat.era || "—"} />
-              <StatCard title="IP" value={currentPitching.stat.inningsPitched || "—"} />
-              <StatCard title="K" value={currentPitching.stat.strikeOuts || "—"} />
-              <StatCard title="WHIP" value={currentPitching.stat.whip || "—"} />
-              <StatCard title="SV" value={currentPitching.stat.saves || "—"} />
-            </div>
-          ) : currentHitting ? (
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-              <StatCard title="AVG" value={currentHitting.stat.avg || "—"} />
-              <StatCard title="HR" value={currentHitting.stat.homeRuns || "—"} />
-              <StatCard title="RBI" value={currentHitting.stat.rbi || "—"} />
-              <StatCard title="OPS" value={currentHitting.stat.ops || "—"} />
-              <StatCard title="SB" value={currentHitting.stat.stolenBases || "—"} />
-              <StatCard title="H" value={currentHitting.stat.hits || "—"} />
-            </div>
-          ) : null}
-        </div>
-      )}
-
-      {/* Career Stats Tables */}
-      <div className="space-y-6">
-        {hittingStats.length > 0 && <PlayerStatsTable stats={hittingStats} type="hitting" />}
-        {pitchingStats.length > 0 && <PlayerStatsTable stats={pitchingStats} type="pitching" />}
-
-        {hittingStats.length === 0 && pitchingStats.length === 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Career Statistics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">No career statistics available for this player.</p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
       </main>
     </>
   )

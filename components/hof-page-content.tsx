@@ -45,7 +45,7 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-4">Hall of Fame</h1>
+        <h1 className="mb-4">Hall of Fame</h1>
       </div>
 
       {/* Year Selector */}

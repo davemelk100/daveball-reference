@@ -1,7 +1,7 @@
 import type React from "react";
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, League_Gothic } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -12,6 +12,10 @@ import "@/styles/globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const leagueGothic = League_Gothic({
+  subsets: ["latin"],
+  variable: "--font-league-gothic"
+});
 
 export const metadata: Metadata = {
   title: {
@@ -100,7 +104,7 @@ export default function RootLayout({
         />
         <WebsiteJsonLd />
       </head>
-      <body className={`font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`font-sans antialiased min-h-screen flex flex-col ${leagueGothic.variable}`}>
         <Header />
         <Suspense fallback={<PageLoader />}>{children}</Suspense>
         <Footer />
