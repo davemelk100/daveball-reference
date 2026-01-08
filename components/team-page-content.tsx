@@ -138,7 +138,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         </Card>
       )}
 
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
+      <div className="flex flex-col md:flex-row gap-6 mb-4">
         <div className="relative h-24 w-24 shrink-0">
           <Image
             src={getTeamLogoUrl(team.id) || "/placeholder.svg"}
@@ -148,18 +148,17 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           />
         </div>
         <div className="flex-1">
-          <div className="flex items-center gap-4 flex-wrap">
-            <h1 className="text-3xl font-bold tracking-tight">{team.name}</h1>
-            <div className="flex items-center gap-2">
-              <SeasonSelector season={season} onSeasonChange={setSeason} />
-              {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-            </div>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">{team.name}</h1>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
           </p>
           <p className="text-sm text-muted-foreground mt-1">{team.locationName}</p>
         </div>
+      </div>
+
+      <div className="mb-8 flex items-center gap-2">
+        <SeasonSelector season={season} onSeasonChange={setSeason} />
+        {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">

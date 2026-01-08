@@ -5,8 +5,8 @@ import { Suspense } from "react"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerCard } from "@/components/player-card"
 import { SeasonSelector } from "@/components/season-selector"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Calendar } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Loader2 } from "lucide-react"
 import type { Player } from "@/lib/mlb-api"
 
 interface PlayersPageContentProps {
@@ -44,22 +44,12 @@ export function PlayersPageContent({ initialPlayers, initialSeason }: PlayersPag
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2">Player Search</h1>
-            <p className="text-muted-foreground">Search for any MLB player to view their stats and profile</p>
-          </div>
-          <Card className="w-fit">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Season
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <SeasonSelector season={season} onSeasonChange={setSeason} />
-            </CardContent>
-          </Card>
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Player Search</h1>
+          <p className="text-muted-foreground">Search for any MLB player to view their stats and profile</p>
+        </div>
+        <div className="mb-6">
+          <SeasonSelector season={season} onSeasonChange={setSeason} />
         </div>
         <Suspense fallback={<div className="h-10 bg-secondary rounded-md animate-pulse max-w-xl" />}>
           <PlayerSearch />

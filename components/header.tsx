@@ -31,7 +31,7 @@ export function Header() {
               alt="Major League Numbers Logo"
               width={161}
               height={100}
-              className="h-[100px] w-auto object-contain"
+              className="h-[130px] w-auto lg:h-auto lg:w-[190px] object-contain"
             />
           </Link>
           <nav className="hidden md:flex items-center gap-1">

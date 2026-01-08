@@ -17,7 +17,15 @@ export function Footer() {
           >
             pybaseball
           </a>{" "}
-          &middot; &copy; {new Date().getFullYear()} Major League Numbers
+          &middot; &copy; {new Date().getFullYear()} Major League Numbers &middot; Designed and Coded by{" "}
+          <a
+            href="https://davemelk.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-foreground transition-colors"
+          >
+            Melkonian Industries
+          </a>
         </p>
       </div>
     </footer>
