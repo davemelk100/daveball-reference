@@ -7,7 +7,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Menu, X } from "lucide-react"
 
-import { ThemeToggle } from "@/components/theme-toggle"
+
 import { Button } from "@/components/ui/button"
 import { HeaderSearch } from "@/components/header-search"
 
@@ -55,12 +55,9 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex-1 max-w-sm mx-4">
-          <HeaderSearch />
-        </div>
-
         <div className="flex items-center gap-2 lg:gap-4 shrink-0">
-          <ThemeToggle />
+          <HeaderSearch />
+
           <Button
             variant="ghost"
             size="icon"

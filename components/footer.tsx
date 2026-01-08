@@ -4,8 +4,8 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-muted/30 mt-auto">
       <div className="container py-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-          <p className="text-sm text-muted-foreground max-w-2xl text-center md:text-left">
+        <div className="flex flex-col items-center gap-4 mb-4">
+          <p className="text-xs text-muted-foreground max-w-2xl text-center">
             Major League Numbers is not affiliated with, endorsed by, or sponsored by Major League Baseball (MLB) or its
             teams. All MLB logos, trademarks, and data are the property of MLB and its respective teams. This site is an
             independent fan project for informational purposes only.
