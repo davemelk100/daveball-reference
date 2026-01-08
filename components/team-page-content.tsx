@@ -148,7 +148,7 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           />
         </div>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold tracking-tight">{team.name}</h1>
+          <h1 className="">{team.name}</h1>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
           </p>

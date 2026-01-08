@@ -13,11 +13,12 @@ export const metadata: Metadata = {
 }
 
 interface PageProps {
-    searchParams: { season?: string }
+    searchParams: Promise<{ season?: string }>
 }
 
 export default async function AllStarPage({ searchParams }: PageProps) {
-    const season = searchParams.season ? Number.parseInt(searchParams.season) : getDefaultSeason()
+    const { season: seasonParam } = await searchParams
+    const season = seasonParam ? Number.parseInt(seasonParam) : getDefaultSeason()
     const rosters = await getAllStarRosters(season)
 
     return <AllStarPageContent initialSeason={season} rosters={rosters} />
