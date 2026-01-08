@@ -33,14 +33,13 @@ export function RosterTable({ players, title }: RosterTableProps) {
                     href={`/players/${player.id}`}
                     className="flex items-center gap-3 hover:text-primary transition-colors"
                   >
-                    <div className="relative h-8 w-8 rounded-full overflow-hidden bg-muted shrink-0">
-                      <Image
-                        src={getPlayerHeadshotUrl(player.id, "small") || "/placeholder.svg"}
-                        alt={player.fullName}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                    <Image
+                      src={getPlayerHeadshotUrl(player.id, "small") || "/placeholder.svg"}
+                      alt={player.fullName}
+                      width={60}
+                      height={60}
+                      className="h-[75px] w-auto shrink-0 rounded-lg"
+                    />
                     <span className="font-medium">{player.fullName}</span>
                   </Link>
                 </TableCell>

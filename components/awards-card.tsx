@@ -21,15 +21,14 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
       href={`/players/${winner.playerId}`}
       className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors"
     >
-      <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted flex-shrink-0">
-        <Image
-          src={getPlayerHeadshotUrl(winner.playerId, "small") || "/placeholder.svg"}
-          alt={winner.playerName}
-          fill
-          className="object-cover"
-          loading="lazy"
-        />
-      </div>
+      <Image
+        src={getPlayerHeadshotUrl(winner.playerId, "small") || "/placeholder.svg"}
+        alt={winner.playerName}
+        width={60}
+        height={60}
+        className="h-[75px] w-auto flex-shrink-0 rounded-lg"
+        loading="lazy"
+      />
       <div className="flex-1 min-w-0">
         <p className="font-medium truncate">{winner.playerName}</p>
         <p className="text-muted-foreground truncate">{winner.team?.name || "—"}</p>

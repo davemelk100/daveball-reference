@@ -40,9 +40,9 @@ export function PlayerSpotlight() {
                 <Image
                   src={getPlayerHeadshotUrl(player.id) || "/placeholder.svg"}
                   alt={player.name}
-                  width={64}
-                  height={64}
-                  className="w-16 h-16 bg-muted object-cover rounded"
+                  width={60}
+                  height={60}
+                  className="h-[75px] w-auto rounded-lg"
                   onError={() => setImageError(true)}
                 />
               ) : (

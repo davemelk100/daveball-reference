@@ -14,12 +14,13 @@ export function PlayerCard({ player }: PlayerCardProps) {
       <Card className="hover:bg-secondary/50 transition-colors cursor-pointer h-full">
         <CardContent className="p-4">
           <div className="flex items-start gap-4">
-            <div className="relative h-14 w-14 rounded-full overflow-hidden bg-muted shrink-0">
+            <div className="shrink-0">
               <Image
                 src={getPlayerHeadshotUrl(player.id, "small") || "/placeholder.svg"}
                 alt={player.fullName}
-                fill
-                className="object-cover"
+                width={60}
+                height={60}
+                className="h-[75px] w-auto rounded-lg"
               />
             </div>
             <div className="flex-1 min-w-0">
