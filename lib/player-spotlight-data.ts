@@ -300,3 +300,358 @@ export function getDailyPlayer(): SpotlightPlayer {
   const index = Math.abs(hash) % spotlightPlayers.length
   return spotlightPlayers[index]
 }
+
+export interface SpotlightManager {
+  id: number
+  name: string
+  team: string
+  years: string
+  fact: string
+}
+
+export const spotlightManagers: SpotlightManager[] = [
+  {
+    id: 112334,
+    name: "Connie Mack",
+    team: "Athletics",
+    years: "1901-1950",
+    fact: "Managed for 53 seasons, winning 3,731 games - both records that will never be broken.",
+  },
+  {
+    id: 118825,
+    name: "John McGraw",
+    team: "Giants",
+    years: "1899-1932",
+    fact: "Won 10 pennants and 3 World Series, pioneering aggressive 'inside baseball' tactics.",
+  },
+  {
+    id: 112375,
+    name: "Casey Stengel",
+    team: "Yankees/Mets",
+    years: "1934-1965",
+    fact: "Won 7 World Series with the Yankees, including 5 straight from 1949-1953.",
+  },
+  {
+    id: 119015,
+    name: "Joe McCarthy",
+    team: "Yankees/Cubs",
+    years: "1926-1950",
+    fact: "Has the highest career winning percentage (.615) among managers with 10+ seasons.",
+  },
+  {
+    id: 116876,
+    name: "Walter Alston",
+    team: "Dodgers",
+    years: "1954-1976",
+    fact: "Signed 23 consecutive one-year contracts and won 4 World Series titles.",
+  },
+  {
+    id: 117555,
+    name: "Earl Weaver",
+    team: "Orioles",
+    years: "1968-1986",
+    fact: "Never had a losing season and pioneered the use of detailed statistics and platoon systems.",
+  },
+  {
+    id: 112932,
+    name: "Sparky Anderson",
+    team: "Reds/Tigers",
+    years: "1970-1995",
+    fact: "Only manager to win World Series in both leagues, with the Big Red Machine and '84 Tigers.",
+  },
+  {
+    id: 117591,
+    name: "Tommy Lasorda",
+    team: "Dodgers",
+    years: "1976-1996",
+    fact: "Famous for saying he 'bleeds Dodger blue' and won 2 World Series titles.",
+  },
+  {
+    id: 118813,
+    name: "Tony La Russa",
+    team: "Multiple",
+    years: "1979-2022",
+    fact: "Won 3 World Series with two different teams and pioneered the modern use of relief pitchers.",
+  },
+  {
+    id: 112375,
+    name: "Bobby Cox",
+    team: "Braves/Blue Jays",
+    years: "1978-2010",
+    fact: "Led the Braves to 14 consecutive division titles and holds the record for most ejections (162).",
+  },
+  {
+    id: 117601,
+    name: "Joe Torre",
+    team: "Multiple",
+    years: "1977-2010",
+    fact: "Won 4 World Series with the Yankees and later served as MLB's Chief Baseball Officer.",
+  },
+  {
+    id: 113476,
+    name: "Dusty Baker",
+    team: "Multiple",
+    years: "1993-2023",
+    fact: "Finally won his first World Series in 2022 with Houston after managing for 25 seasons.",
+  },
+  {
+    id: 113547,
+    name: "Bruce Bochy",
+    team: "Padres/Giants/Rangers",
+    years: "1995-present",
+    fact: "Won 4 World Series titles - 3 with the Giants and 1 with the Rangers in 2023.",
+  },
+  {
+    id: 119177,
+    name: "Miller Huggins",
+    team: "Cardinals/Yankees",
+    years: "1913-1929",
+    fact: "Built the 1927 Yankees 'Murderers Row' dynasty despite standing only 5'6\".",
+  },
+  {
+    id: 116344,
+    name: "Leo Durocher",
+    team: "Multiple",
+    years: "1939-1973",
+    fact: "Coined the phrase 'Nice guys finish last' and managed both the Giants' and Cubs' pennant runs.",
+  },
+  {
+    id: 117001,
+    name: "Dick Williams",
+    team: "Multiple",
+    years: "1967-1988",
+    fact: "Won World Series with three different franchises: Red Sox, A's, and Padres pennant.",
+  },
+  {
+    id: 113567,
+    name: "Whitey Herzog",
+    team: "Multiple",
+    years: "1973-1990",
+    fact: "Perfected 'Whiteyball' - speed, defense, and pitching - winning the 1982 World Series.",
+  },
+  {
+    id: 122285,
+    name: "Billy Martin",
+    team: "Multiple",
+    years: "1969-1988",
+    fact: "Managed the Yankees 5 different times and was known for his fiery temperament.",
+  },
+  {
+    id: 118744,
+    name: "Jim Leyland",
+    team: "Multiple",
+    years: "1986-2013",
+    fact: "Won the 1997 World Series with the Marlins and led 3 different teams to the playoffs.",
+  },
+  {
+    id: 116990,
+    name: "Terry Francona",
+    team: "Multiple",
+    years: "2004-present",
+    fact: "Broke the 86-year 'Curse of the Bambino' by leading the Red Sox to the 2004 World Series.",
+  },
+]
+
+export function getDailyManager(): SpotlightManager {
+  const today = new Date()
+  // Use a different seed than players by adding 'mgr' to the string
+  const dateString = `mgr-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+
+  let hash = 0
+  for (let i = 0; i < dateString.length; i++) {
+    const char = dateString.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash
+  }
+
+  const index = Math.abs(hash) % spotlightManagers.length
+  return spotlightManagers[index]
+}
+
+export interface SpotlightTeam {
+  id: number
+  name: string
+  city: string
+  league: string
+  founded: string
+  fact: string
+}
+
+export const spotlightTeams: SpotlightTeam[] = [
+  {
+    id: 147,
+    name: "Yankees",
+    city: "New York",
+    league: "AL East",
+    founded: "1901",
+    fact: "Won 27 World Series titles, more than any other MLB franchise.",
+  },
+  {
+    id: 111,
+    name: "Red Sox",
+    city: "Boston",
+    league: "AL East",
+    founded: "1901",
+    fact: "Broke the 86-year 'Curse of the Bambino' by winning the 2004 World Series.",
+  },
+  {
+    id: 119,
+    name: "Dodgers",
+    city: "Los Angeles",
+    league: "NL West",
+    founded: "1883",
+    fact: "Originally the Brooklyn Dodgers, moved to LA in 1958 and have won 7 World Series.",
+  },
+  {
+    id: 138,
+    name: "Cardinals",
+    city: "St. Louis",
+    league: "NL Central",
+    founded: "1882",
+    fact: "Won 11 World Series titles, second most in MLB history.",
+  },
+  {
+    id: 137,
+    name: "Giants",
+    city: "San Francisco",
+    league: "NL West",
+    founded: "1883",
+    fact: "One of the oldest franchises, moved from New York to San Francisco in 1958.",
+  },
+  {
+    id: 112,
+    name: "Cubs",
+    city: "Chicago",
+    league: "NL Central",
+    founded: "1876",
+    fact: "Ended a 108-year championship drought by winning the 2016 World Series.",
+  },
+  {
+    id: 145,
+    name: "White Sox",
+    city: "Chicago",
+    league: "AL Central",
+    founded: "1901",
+    fact: "The 1919 'Black Sox' scandal remains one of baseball's most infamous moments.",
+  },
+  {
+    id: 133,
+    name: "Athletics",
+    city: "Oakland",
+    league: "AL West",
+    founded: "1901",
+    fact: "Won 3 straight World Series (1972-74) and pioneered 'Moneyball' analytics.",
+  },
+  {
+    id: 114,
+    name: "Tigers",
+    city: "Detroit",
+    league: "AL Central",
+    founded: "1901",
+    fact: "Home to legends like Ty Cobb, who holds the highest career batting average (.366).",
+  },
+  {
+    id: 134,
+    name: "Pirates",
+    city: "Pittsburgh",
+    league: "NL Central",
+    founded: "1881",
+    fact: "Won the first World Series in 1903 and Roberto Clemente's #21 is retired league-wide.",
+  },
+  {
+    id: 110,
+    name: "Orioles",
+    city: "Baltimore",
+    league: "AL East",
+    founded: "1901",
+    fact: "Camden Yards (1992) revolutionized ballpark design, inspiring the retro-modern era.",
+  },
+  {
+    id: 113,
+    name: "Reds",
+    city: "Cincinnati",
+    league: "NL Central",
+    founded: "1881",
+    fact: "The 'Big Red Machine' of the 1970s is considered one of the greatest teams ever.",
+  },
+  {
+    id: 142,
+    name: "Twins",
+    city: "Minnesota",
+    league: "AL Central",
+    founded: "1901",
+    fact: "Originally the Washington Senators, moved to Minnesota in 1961.",
+  },
+  {
+    id: 158,
+    name: "Brewers",
+    city: "Milwaukee",
+    league: "NL Central",
+    founded: "1969",
+    fact: "Started as the Seattle Pilots for one season before moving to Milwaukee.",
+  },
+  {
+    id: 117,
+    name: "Astros",
+    city: "Houston",
+    league: "AL West",
+    founded: "1962",
+    fact: "Played in the iconic Astrodome, the world's first domed stadium.",
+  },
+  {
+    id: 120,
+    name: "Nationals",
+    city: "Washington",
+    league: "NL East",
+    founded: "1969",
+    fact: "Won their first World Series in 2019 after being down 3-2 in the NLCS.",
+  },
+  {
+    id: 121,
+    name: "Mets",
+    city: "New York",
+    league: "NL East",
+    founded: "1962",
+    fact: "The 'Miracle Mets' won the 1969 World Series just 7 years after their first 120-loss season.",
+  },
+  {
+    id: 139,
+    name: "Rays",
+    city: "Tampa Bay",
+    league: "AL East",
+    founded: "1998",
+    fact: "Consistently compete despite having one of MLB's lowest payrolls.",
+  },
+  {
+    id: 140,
+    name: "Rangers",
+    city: "Texas",
+    league: "AL West",
+    founded: "1961",
+    fact: "Won their first World Series in 2023 after 63 years as a franchise.",
+  },
+  {
+    id: 136,
+    name: "Mariners",
+    city: "Seattle",
+    league: "AL West",
+    founded: "1977",
+    fact: "Hold the record for most wins in a season (116 in 2001) without winning the World Series.",
+  },
+]
+
+export function getDailyTeam(): SpotlightTeam {
+  const today = new Date()
+  // Use a different seed than players/managers
+  const dateString = `team-${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+
+  let hash = 0
+  for (let i = 0; i < dateString.length; i++) {
+    const char = dateString.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash
+  }
+
+  const index = Math.abs(hash) % spotlightTeams.length
+  return spotlightTeams[index]
+}

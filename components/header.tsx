@@ -9,16 +9,6 @@ import { Menu, X } from "lucide-react"
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
-import dynamic from "next/dynamic"
-import { Skeleton } from "@/components/ui/skeleton"
-
-const TriviaCard = dynamic(
-  () => import("@/components/trivia-card").then((mod) => mod.TriviaCard),
-  {
-    loading: () => <Skeleton className="h-9 w-28" />,
-    ssr: false,
-  }
-)
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -64,9 +54,6 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden sm:block">
-            <TriviaCard />
-          </div>
           <Button
             variant="ghost"
             size="icon"

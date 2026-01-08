@@ -34,17 +34,16 @@ const AwardsCard = dynamic(
   }
 );
 
-const TriviaCard = dynamic(
+const TriviaPanel = dynamic(
   () =>
     import("@/components/trivia-card").then((mod) => ({
-      default: mod.TriviaCard,
+      default: mod.TriviaPanel,
     })),
   {
-    loading: () => <Skeleton className="h-[100px] w-full" />,
+    loading: () => <Skeleton className="h-[300px] w-full" />,
+    ssr: false,
   }
 );
-
-
 
 const PlayerSpotlight = dynamic(
   () =>
@@ -148,16 +147,18 @@ export function DashboardContent({
       {/* Hero Section */}
       <div className="mb-8 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
         <div>
-          <h1 className="mb-2">
-            Major League Numbers
-          </h1>
+          <h1 className="mb-2">Major League Numbers</h1>
           <p className="text-muted-foreground text-lg">
-            An easier way to search MLB history
+            The simplest way to search MLB history.
           </p>
         </div>
       </div>
 
-      <PlayerSpotlight />
+      {/* Daily Trivia & Player of the Day Row */}
+      <div className="grid gap-6 lg:grid-cols-2 mb-8">
+        <TriviaPanel />
+        <PlayerSpotlight />
+      </div>
 
       {/* Season Card */}
       <div className="mb-4">
@@ -238,7 +239,9 @@ export function DashboardContent({
           />
           <AwardsCard
             title="Cy Young Winners"
-            winners={awardsLeague === "AL" ? cyYoungWinners.al : cyYoungWinners.nl}
+            winners={
+              awardsLeague === "AL" ? cyYoungWinners.al : cyYoungWinners.nl
+            }
             limit={5}
           />
         </div>

@@ -1,99 +1,124 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { User, Star, X } from "lucide-react"
-import { getDailyPlayer, type SpotlightPlayer } from "@/lib/player-spotlight-data"
-import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
+import { User, Award } from "lucide-react"
+import { getDailyPlayer, getDailyManager, getDailyTeam, type SpotlightPlayer, type SpotlightManager, type SpotlightTeam } from "@/lib/player-spotlight-data"
+import { getPlayerHeadshotUrl, getTeamLogoUrl } from "@/lib/mlb-api"
 import Image from "next/image"
 import Link from "next/link"
 
-
-
 export function PlayerSpotlight() {
   const [player, setPlayer] = useState<SpotlightPlayer | null>(null)
-  const [imageError, setImageError] = useState(false)
-  const [isVisible, setIsVisible] = useState(true)
+  const [manager, setManager] = useState<SpotlightManager | null>(null)
+  const [team, setTeam] = useState<SpotlightTeam | null>(null)
+  const [playerImageError, setPlayerImageError] = useState(false)
 
   useEffect(() => {
-    const dailyPlayer = getDailyPlayer()
-    setPlayer(dailyPlayer)
-
-    // Check if dismissed for today
-    const today = new Date().toLocaleDateString('en-US')
-    const dismissedKey = `spotlight-dismissed-${today}-${dailyPlayer.id}`
-    if (localStorage.getItem(dismissedKey)) {
-      setIsVisible(false)
-    }
+    setPlayer(getDailyPlayer())
+    setManager(getDailyManager())
+    setTeam(getDailyTeam())
   }, [])
 
-  const handleDismiss = () => {
-    if (!player) return
-    setIsVisible(false)
-    const today = new Date().toLocaleDateString('en-US')
-    const dismissedKey = `spotlight-dismissed-${today}-${player.id}`
-    localStorage.setItem(dismissedKey, 'true')
-  }
-
-  if (!player || !isVisible) return null
+  if (!player || !manager || !team) return null
 
   return (
-    <div className="w-full bg-muted/30 rounded-lg border p-3 sm:p-4 mb-8 relative group/card">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute right-2 top-2 h-8 w-8 rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity"
-        onClick={handleDismiss}
-        aria-label="Dismiss Player of the Day"
-      >
-        <X className="h-4 w-4" />
-      </Button>
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <Link href={`/players/${player.id}`} className="shrink-0 group relative overflow-hidden rounded-xl">
-          {!imageError ? (
-            <Image
-              src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
-              alt={player.name}
-              width={80}
-              height={80}
-              style={{ width: 'auto', height: '80px' }}
-              className="rounded-xl transition-transform group-hover:scale-105"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <div className="w-[80px] h-[80px] bg-muted flex items-center justify-center rounded-xl">
-              <User className="h-8 w-8 text-muted-foreground" />
+    <div className="w-full h-full bg-muted/30 rounded-lg border p-3 sm:p-4">
+      <div className="grid gap-4 lg:grid-rows-3 h-full">
+        {/* Player of the Day */}
+        <div className="space-y-2">
+          <span className="text-xs font-medium text-primary uppercase tracking-wider">Player of the Day</span>
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <Link href={`/players/${player.id}`} className="shrink-0 group relative overflow-hidden rounded-xl">
+              {!playerImageError ? (
+                <Image
+                  src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
+                  alt={player.name}
+                  width={64}
+                  height={64}
+                  style={{ width: 'auto', height: '64px' }}
+                  className="rounded-xl transition-transform group-hover:scale-105"
+                  onError={() => setPlayerImageError(true)}
+                />
+              ) : (
+                <div className="w-[64px] h-[64px] bg-muted flex items-center justify-center rounded-xl">
+                  <User className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+            </Link>
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <Link
+                href={`/players/${player.id}`}
+                className="text-lg font-bold hover:underline decoration-primary decoration-2 underline-offset-4 block truncate"
+              >
+                {player.name}
+              </Link>
+              <div className="flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+                <span>{player.team}</span>
+                <span>•</span>
+                <span>{player.position}</span>
+                <span>•</span>
+                <span>{player.years}</span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                {player.fact}
+              </p>
             </div>
-          )}
-        </Link>
-        <div className="space-y-1 flex-1 pr-8">
-          <div className="flex items-center gap-2 mb-1">
-            <Star className="h-4 w-4 text-primary fill-primary" />
-            <h2 className="text-sm font-medium text-primary uppercase tracking-wider">Player of the Day</h2>
           </div>
-          <Link
-            href={`/players/${player.id}`}
-            className="text-xl sm:text-2xl font-bold hover:underline decoration-primary decoration-2 underline-offset-4"
-          >
-            {player.name}
-          </Link>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span>{player.team}</span>
-            <span>•</span>
-            <span>{player.position}</span>
-            <span>•</span>
-            <span>{player.years}</span>
-          </div>
-          <p className="text-sm sm:text-base max-w-2xl leading-relaxed">
-            {player.fact}
-          </p>
         </div>
-        <div className="hidden lg:block shrink-0">
-          <Link href={`/players/${player.id}`}>
-            <Button variant="outline" className="gap-2">
-              View Stats
-            </Button>
-          </Link>
+
+        {/* Manager of the Day */}
+        <div className="space-y-2 border-t border-border pt-4 lg:pt-0 lg:border-t-0">
+          <span className="text-xs font-medium text-primary uppercase tracking-wider">Manager of the Day</span>
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="shrink-0 w-[64px] h-[64px] bg-muted/50 flex items-center justify-center rounded-xl">
+              <Award className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <p className="text-lg font-bold truncate">
+                {manager.name}
+              </p>
+              <div className="flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+                <span>{manager.team}</span>
+                <span>•</span>
+                <span>{manager.years}</span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                {manager.fact}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Team of the Day */}
+        <div className="space-y-2 border-t border-border pt-4 lg:pt-0 lg:border-t-0">
+          <span className="text-xs font-medium text-primary uppercase tracking-wider">Team of the Day</span>
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <Link href={`/teams/${team.id}`} className="shrink-0 w-[64px] h-[64px] flex items-center justify-center group">
+              <Image
+                src={getTeamLogoUrl(team.id)}
+                alt={`${team.city} ${team.name} logo`}
+                width={64}
+                height={64}
+                className="object-contain transition-transform group-hover:scale-105"
+              />
+            </Link>
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <Link
+                href={`/teams/${team.id}`}
+                className="text-lg font-bold hover:underline decoration-primary decoration-2 underline-offset-4 block truncate"
+              >
+                {team.city} {team.name}
+              </Link>
+              <div className="flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+                <span>{team.league}</span>
+                <span>•</span>
+                <span>Est. {team.founded}</span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                {team.fact}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
