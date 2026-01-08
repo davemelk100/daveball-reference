@@ -38,7 +38,7 @@ export function PlayerSpotlight() {
   if (!player || !isVisible) return null
 
   return (
-    <div className="w-full bg-muted/30 rounded-lg border p-4 sm:p-6 mb-8 relative group/card">
+    <div className="w-full bg-muted/30 rounded-lg border p-3 sm:p-4 mb-8 relative group/card">
       <Button
         variant="ghost"
         size="icon"
@@ -48,32 +48,32 @@ export function PlayerSpotlight() {
       >
         <X className="h-4 w-4" />
       </Button>
-      <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <Link href={`/players/${player.id}`} className="shrink-0 group relative overflow-hidden rounded-xl">
           {!imageError ? (
             <Image
               src={getPlayerHeadshotUrl(player.id, "large") || "/placeholder.svg"}
               alt={player.name}
-              width={120}
-              height={120}
-              style={{ width: 'auto', height: '120px' }}
+              width={80}
+              height={80}
+              style={{ width: 'auto', height: '80px' }}
               className="rounded-xl transition-transform group-hover:scale-105"
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className="w-[120px] h-[120px] bg-muted flex items-center justify-center rounded-xl">
-              <User className="h-12 w-12 text-muted-foreground" />
+            <div className="w-[80px] h-[80px] bg-muted flex items-center justify-center rounded-xl">
+              <User className="h-8 w-8 text-muted-foreground" />
             </div>
           )}
         </Link>
-        <div className="space-y-2 flex-1 pr-8">
+        <div className="space-y-1 flex-1 pr-8">
           <div className="flex items-center gap-2 mb-1">
             <Star className="h-4 w-4 text-primary fill-primary" />
             <h2 className="text-sm font-medium text-primary uppercase tracking-wider">Player of the Day</h2>
           </div>
           <Link
             href={`/players/${player.id}`}
-            className="text-2xl sm:text-3xl font-bold hover:underline decoration-primary decoration-2 underline-offset-4"
+            className="text-xl sm:text-2xl font-bold hover:underline decoration-primary decoration-2 underline-offset-4"
           >
             {player.name}
           </Link>
@@ -84,7 +84,7 @@ export function PlayerSpotlight() {
             <span>•</span>
             <span>{player.years}</span>
           </div>
-          <p className="text-base sm:text-lg max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base max-w-2xl leading-relaxed">
             {player.fact}
           </p>
         </div>
