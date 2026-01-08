@@ -26,7 +26,7 @@ export function PlayerSpotlight() {
       <div className="grid gap-4 lg:grid-rows-3 h-full">
         {/* Player of the Day */}
         <div className="space-y-2">
-          <span className="text-xs font-medium text-primary uppercase tracking-wider">Player of the Day</span>
+          <span className="text-base font-semibold text-primary uppercase tracking-wider">Player of the Day</span>
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <Link href={`/players/${player.id}`} className="shrink-0 group relative overflow-hidden rounded-xl">
               {!playerImageError ? (
@@ -68,7 +68,7 @@ export function PlayerSpotlight() {
 
         {/* Manager of the Day */}
         <div className="space-y-2 border-t border-border pt-4 lg:pt-0 lg:border-t-0">
-          <span className="text-xs font-medium text-primary uppercase tracking-wider">Manager of the Day</span>
+          <span className="text-base font-semibold text-primary uppercase tracking-wider">Manager of the Day</span>
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <div className="shrink-0 w-[64px] h-[64px] bg-muted/50 flex items-center justify-center rounded-xl">
               <Award className="h-6 w-6 text-muted-foreground" />
@@ -91,7 +91,7 @@ export function PlayerSpotlight() {
 
         {/* Team of the Day */}
         <div className="space-y-2 border-t border-border pt-4 lg:pt-0 lg:border-t-0">
-          <span className="text-xs font-medium text-primary uppercase tracking-wider">Team of the Day</span>
+          <span className="text-base font-semibold text-primary uppercase tracking-wider">Team of the Day</span>
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <Link href={`/teams/${team.id}`} className="shrink-0 w-[64px] h-[64px] flex items-center justify-center group">
               <Image

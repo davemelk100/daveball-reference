@@ -9,6 +9,7 @@ import { Menu, X } from "lucide-react"
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
+import { HeaderSearch } from "@/components/header-search"
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -25,24 +26,24 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-[80px] lg:h-[116px] items-center justify-between">
-        <div className="flex items-center gap-8">
+      <div className="container flex h-[80px] lg:h-[116px] items-center justify-between gap-4">
+        <div className="flex items-center gap-4 lg:gap-8 min-w-0">
           <Link href="/" className="flex-shrink-0 border-0">
             <Image
               src="/mln-logo.png"
               alt="Major League Numbers Logo"
               width={161}
               height={100}
-              className="w-[65px] lg:w-[130px] h-auto object-contain border-0"
+              className="w-[50px] lg:w-[130px] h-auto object-contain border-0"
             />
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                  "px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap",
                   pathname === item.href
                     ? "bg-secondary/50 text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
@@ -53,11 +54,17 @@ export function Header() {
             ))}
           </nav>
         </div>
-        <div className="flex items-center gap-4">
+
+        <div className="flex-1 max-w-sm mx-4">
+          <HeaderSearch />
+        </div>
+
+        <div className="flex items-center gap-2 lg:gap-4 shrink-0">
+          <ThemeToggle />
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="xl:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -67,23 +74,25 @@ export function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <nav className="md:hidden border-t border-border bg-background">
-          <div className="container py-2 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "block px-3 py-3 text-sm font-medium rounded-md transition-colors",
-                  pathname === item.href
-                    ? "bg-secondary/50 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
+        <nav className="xl:hidden border-t border-border bg-background animate-in slide-in-from-top duration-200">
+          <div className="container py-4 space-y-4">
+            <div className="space-y-1">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "block px-3 py-3 text-base font-medium rounded-md transition-colors",
+                    pathname === item.href
+                      ? "bg-secondary text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </nav>
       )}

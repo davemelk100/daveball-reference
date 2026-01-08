@@ -144,6 +144,18 @@ export interface AwardWinner {
   notes?: string
 }
 
+export interface Coach {
+  person: {
+    id: number
+    fullName: string
+    link: string
+  }
+  jerseyNumber: string
+  job: string
+  jobId: string
+  title: string
+}
+
 async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response | null> {
   for (let i = 0; i < retries; i++) {
     try {
@@ -393,6 +405,28 @@ export async function getTeamStats(teamId: number, season = getDefaultSeason()):
     console.error("Error fetching team stats:", error)
     return []
   }
+}
+
+export async function getTeamCoaches(teamId: number, season = getDefaultSeason()): Promise<Coach[]> {
+  const cacheKey = `coaches:${teamId}:${season}`
+  const cached = getCached<Coach[]>(cacheKey)
+  if (cached) return cached
+
+  try {
+    const res = await fetchWithRetry(`${BASE_URL}/teams/${teamId}/coaches?season=${season}`)
+    const data = await safeJsonParse(res)
+    const result = data?.roster || []
+    setCache(cacheKey, result)
+    return result
+  } catch (error) {
+    console.error("Error fetching coaches:", error)
+    return []
+  }
+}
+
+export async function getTeamManager(teamId: number, season = getDefaultSeason()): Promise<Coach | null> {
+  const coaches = await getTeamCoaches(teamId, season)
+  return coaches.find((c) => c.jobId === "MNGR") || null
 }
 
 export async function getTeamHistory(
