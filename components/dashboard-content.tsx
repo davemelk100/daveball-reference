@@ -119,7 +119,7 @@ export function DashboardContent({
       </div>
 
       {/* Season Card */}
-      <div className="mb-4 flex justify-center">
+      <div className="mb-4">
         <SeasonSelector season={season} onSeasonChange={setSeason} isLoading={isLoading} />
       </div>
 

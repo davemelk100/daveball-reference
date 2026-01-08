@@ -23,15 +23,15 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-[116px] items-center justify-between">
+      <div className="container flex h-[80px] lg:h-[116px] items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/">
+          <Link href="/" className="flex-shrink-0">
             <Image
               src="/min.png"
               alt="Major League Numbers Logo"
               width={161}
               height={100}
-              className="h-[100px] w-auto"
+              className="h-[100px] w-auto object-contain"
             />
           </Link>
           <nav className="hidden md:flex items-center gap-1">
@@ -56,7 +56,9 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <HeaderSearch />
+          <div className="hidden lg:block">
+            <HeaderSearch />
+          </div>
           <ThemeToggle />
           <Button
             variant="ghost"
@@ -67,6 +69,12 @@ export function Header() {
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
+        </div>
+      </div>
+      {/* Search bar row for tablet and below */}
+      <div className="lg:hidden border-t border-border">
+        <div className="container py-2 [&_>_div]:w-full [&_input]:w-full">
+          <HeaderSearch />
         </div>
       </div>
       {mobileMenuOpen && (

@@ -27,9 +27,9 @@ const seasons = Array.from({ length: maxYear - 1960 + 1 }, (_, i) => maxYear - i
 export function SeasonSelector({ season, onSeasonChange, isLoading }: SeasonSelectorProps) {
   return (
     <Select value={season.toString()} onValueChange={(val) => onSeasonChange(Number.parseInt(val))}>
-      <Card className="py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
-        <CardContent className="p-0">
-          <SelectTrigger className="w-full border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
+      <Card className="w-full py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">
+        <CardContent className="p-0 flex justify-center">
+          <SelectTrigger className="w-auto border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
             <div className="flex items-center gap-3">
               <span className="text-xl font-semibold text-[#4e6095]">Season</span>
               <span className="text-xl font-bold border-b-2 border-foreground">
