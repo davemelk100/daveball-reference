@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { ChevronUp, ChevronDown, Trophy } from "lucide-react"
+import { ChevronUp, ChevronDown } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -127,8 +127,7 @@ export function HistoricalTable({ data }: HistoricalTableProps) {
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Best Season</p>
-              <p className="font-bold flex items-center gap-1">
-                <Trophy className="h-3 w-3 text-yellow-500" />
+              <p className="font-bold">
                 {stats.bestSeason.season} ({stats.bestSeason.wins}-{stats.bestSeason.losses})
               </p>
             </div>
@@ -180,9 +179,8 @@ export function HistoricalTable({ data }: HistoricalTableProps) {
                   <TableCell className="text-right hidden sm:table-cell">{record.runsScored}</TableCell>
                   <TableCell className="text-right hidden sm:table-cell">{record.runsAllowed}</TableCell>
                   <TableCell
-                    className={`text-right font-medium ${
-                      record.runDifferential > 0 ? "text-green-500" : record.runDifferential < 0 ? "text-red-500" : ""
-                    }`}
+                    className={`text-right font-medium ${record.runDifferential > 0 ? "text-green-500" : record.runDifferential < 0 ? "text-red-500" : ""
+                      }`}
                   >
                     {record.runDifferential > 0 ? "+" : ""}
                     {record.runDifferential}

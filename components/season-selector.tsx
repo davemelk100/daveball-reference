@@ -8,6 +8,7 @@ interface SeasonSelectorProps {
   season: number
   onSeasonChange: (season: number) => void
   isLoading?: boolean
+  startYear?: number
 }
 
 const getMaxYear = () => {
@@ -21,10 +22,10 @@ const getMaxYear = () => {
   return year
 }
 
-const maxYear = getMaxYear()
-const seasons = Array.from({ length: maxYear - 1960 + 1 }, (_, i) => maxYear - i)
+export function SeasonSelector({ season, onSeasonChange, isLoading, startYear = 1960 }: SeasonSelectorProps) {
+  const maxYear = getMaxYear()
+  const seasons = Array.from({ length: maxYear - startYear + 1 }, (_, i) => maxYear - i)
 
-export function SeasonSelector({ season, onSeasonChange, isLoading }: SeasonSelectorProps) {
   return (
     <Select value={season.toString()} onValueChange={(val) => onSeasonChange(Number.parseInt(val))}>
       <Card className="w-full py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors">

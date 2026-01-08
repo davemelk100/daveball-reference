@@ -1,7 +1,6 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 import Link from "next/link"
 import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
@@ -9,12 +8,11 @@ import type { AwardWinner } from "@/lib/awards-data"
 
 interface AwardsCardProps {
   title: string
-  alWinners: AwardWinner[]
-  nlWinners: AwardWinner[]
+  winners: AwardWinner[]
   limit?: number
 }
 
-export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCardProps) {
+export function AwardsCard({ title, winners, limit = 5 }: AwardsCardProps) {
 
   const WinnerRow = ({ winner }: { winner: AwardWinner }) => (
     <Link
@@ -39,35 +37,21 @@ export function AwardsCard({ title, alWinners, nlWinners, limit = 5 }: AwardsCar
 
   return (
     <Card>
-      <Tabs defaultValue="al" className="w-full">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-base font-semibold">
-            {title}
-          </CardTitle>
-          <TabsList>
-            <TabsTrigger value="al">AL</TabsTrigger>
-            <TabsTrigger value="nl">NL</TabsTrigger>
-          </TabsList>
-        </CardHeader>
-        <CardContent>
-          <TabsContent value="al" className="space-y-1 mt-0">
-            {alWinners.slice(0, limit).map((winner) => (
-              <WinnerRow key={`${winner.playerId}-${winner.season}`} winner={winner} />
-            ))}
-            {alWinners.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">No data available</p>
-            )}
-          </TabsContent>
-          <TabsContent value="nl" className="space-y-1 mt-0">
-            {nlWinners.slice(0, limit).map((winner) => (
-              <WinnerRow key={`${winner.playerId}-${winner.season}`} winner={winner} />
-            ))}
-            {nlWinners.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">No data available</p>
-            )}
-          </TabsContent>
-        </CardContent>
-      </Tabs>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-base font-semibold">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-1 mt-0">
+          {winners.slice(0, limit).map((winner) => (
+            <WinnerRow key={`${winner.playerId}-${winner.season}`} winner={winner} />
+          ))}
+          {winners.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-4">No data available</p>
+          )}
+        </div>
+      </CardContent>
     </Card>
   )
 }

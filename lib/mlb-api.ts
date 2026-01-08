@@ -523,6 +523,21 @@ export async function getCyYoungWinners(season?: number): Promise<{ al: AwardWin
   }
 }
 
+export async function getAllStarRosters(season?: number): Promise<{ al: AwardWinner[]; nl: AwardWinner[] }> {
+  try {
+    // ALAS = AL All-Star, NLAS = NL All-Star
+    const [alStars, nlStars] = await Promise.all([getAwardWinners("ALAS", season), getAwardWinners("NLAS", season)])
+
+    return {
+      al: alStars.sort((a, b) => (a.team?.name || "").localeCompare(b.team?.name || "")),
+      nl: nlStars.sort((a, b) => (a.team?.name || "").localeCompare(b.team?.name || "")),
+    }
+  } catch (error) {
+    console.error("Error fetching All-Star rosters:", error)
+    return { al: [], nl: [] }
+  }
+}
+
 export interface AllStarAppearance {
   season: number
   league: "AL" | "NL"

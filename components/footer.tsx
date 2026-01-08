@@ -17,7 +17,7 @@ export function Footer() {
           >
             pybaseball
           </a>{" "}
-          &middot; &copy; {new Date().getFullYear()} Major League Numbers &middot; Designed and Coded by{" "}
+          &middot; &copy; {new Date().getFullYear()} Major League Numbers &middot; Manufactured by{" "}
           <a
             href="https://davemelk.com/"
             target="_blank"

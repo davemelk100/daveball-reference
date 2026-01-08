@@ -107,6 +107,7 @@ export function DashboardContent({
   const [selectedLeague, setSelectedLeague] = useState<"AL" | "NL">("AL");
   const [chartLeague, setChartLeague] = useState<"AL" | "NL">("AL");
   const [tableLeague, setTableLeague] = useState<"AL" | "NL">("AL");
+  const [awardsLeague, setAwardsLeague] = useState<"AL" | "NL">("AL");
 
   const { data, isLoading } = useSWR<DashboardData>(
     `/api/dashboard?season=${season}`,
@@ -225,18 +226,27 @@ export function DashboardContent({
 
       {/* Award Winners */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Award Winners</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Award Winners</h2>
+          <Tabs
+            value={awardsLeague}
+            onValueChange={(value) => setAwardsLeague(value as "AL" | "NL")}
+          >
+            <TabsList>
+              <TabsTrigger value="AL">AL</TabsTrigger>
+              <TabsTrigger value="NL">NL</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <AwardsCard
             title="MVP Winners"
-            alWinners={mvpWinners.al}
-            nlWinners={mvpWinners.nl}
+            winners={awardsLeague === "AL" ? mvpWinners.al : mvpWinners.nl}
             limit={5}
           />
           <AwardsCard
             title="Cy Young Winners"
-            alWinners={cyYoungWinners.al}
-            nlWinners={cyYoungWinners.nl}
+            winners={awardsLeague === "AL" ? cyYoungWinners.al : cyYoungWinners.nl}
             limit={5}
           />
         </div>
@@ -292,9 +302,6 @@ export function DashboardContent({
                 <TabsTrigger value="NL">NL</TabsTrigger>
               </TabsList>
             </Tabs>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/players">View All Players</Link>
-            </Button>
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

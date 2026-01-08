@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Menu, X } from "lucide-react"
-import { HeaderSearch } from "@/components/header-search"
+
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 
@@ -15,6 +15,7 @@ const navigation = [
   { name: "Players", href: "/players" },
   { name: "Teams", href: "/teams" },
   { name: "Standings", href: "/standings" },
+  { name: "All Stars", href: "/all-star" },
   { name: "HOF", href: "/hof" },
 ]
 
@@ -53,9 +54,7 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <div className="hidden lg:block">
-            <HeaderSearch />
-          </div>
+
           <ThemeToggle />
           <Button
             variant="ghost"
@@ -68,12 +67,7 @@ export function Header() {
           </Button>
         </div>
       </div>
-      {/* Search bar row for tablet and below */}
-      <div className="lg:hidden border-t border-border">
-        <div className="container py-2 [&_>_div]:w-full [&_input]:w-full">
-          <HeaderSearch />
-        </div>
-      </div>
+
       {mobileMenuOpen && (
         <nav className="md:hidden border-t border-border bg-background">
           <div className="container py-2 space-y-1">
