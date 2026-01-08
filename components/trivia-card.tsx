@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
@@ -15,7 +16,7 @@ interface AnsweredQuestion {
   isCorrect: boolean
 }
 
-export function TriviaCard() {
+function TriviaCardContent() {
   const [quizDate, setQuizDate] = useState<Date | null>(null)
   const [dailyQuestions, setDailyQuestions] = useState<TriviaQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -23,6 +24,15 @@ export function TriviaCard() {
   const [timeUntilNext, setTimeUntilNext] = useState("")
   const [isComplete, setIsComplete] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+
+  const searchParams = useSearchParams()
+  const openTrivia = searchParams.get("trivia")
+
+  useEffect(() => {
+    if (openTrivia === "open") {
+      setIsOpen(true)
+    }
+  }, [openTrivia])
 
   useEffect(() => {
     // Set the quiz date once on mount to avoid issues if usage crosses midnight
@@ -97,7 +107,7 @@ export function TriviaCard() {
   const handleShare = async () => {
     const score = answeredQuestions.filter(a => a.isCorrect).length
     const date = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
-    const text = `I got ${score}/5 on today's (${date}) Major League Numbers trivia! ⚾\n\nPlay here: https://majorleaguenumbers.com`
+    const text = `I got ${score}/5 on today's (${date}) Major League Numbers trivia! ⚾\n\nPlay here: https://majorleaguenumbers.com?trivia=open`
 
     if (navigator.share) {
       try {
@@ -256,5 +266,13 @@ export function TriviaCard() {
         </div>
       </PopoverContent>
     </Popover>
+  )
+}
+
+export function TriviaCard() {
+  return (
+    <Suspense fallback={<Button variant="outline" disabled className="gap-2 border-primary/20 bg-transparent"><HelpCircle className="h-4 w-4 text-primary" /> Loading Trivia...</Button>}>
+      <TriviaCardContent />
+    </Suspense>
   )
 }

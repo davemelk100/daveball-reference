@@ -12,7 +12,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
   return (
     <Link href={`/players/${player.id}`}>
       <Card className="hover:bg-secondary/50 transition-colors cursor-pointer h-full">
-        <CardContent className="p-4">
+        <CardContent className="p-3">
           <div className="flex items-start gap-4">
             <div className="shrink-0">
               <Image
@@ -20,7 +20,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
                 alt={player.fullName}
                 width={60}
                 height={60}
-                className="h-[75px] w-auto rounded-lg"
+                className="h-[65px] w-auto rounded-lg"
               />
             </div>
             <div className="flex-1 min-w-0">
