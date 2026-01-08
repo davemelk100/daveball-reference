@@ -2,24 +2,52 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { User, Star } from "lucide-react"
+import { User, Star, X } from "lucide-react"
 import { getDailyPlayer, type SpotlightPlayer } from "@/lib/player-spotlight-data"
 import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import Image from "next/image"
 import Link from "next/link"
 
+import { X } from "lucide-react"
+
 export function PlayerSpotlight() {
   const [player, setPlayer] = useState<SpotlightPlayer | null>(null)
   const [imageError, setImageError] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
-    setPlayer(getDailyPlayer())
+    const dailyPlayer = getDailyPlayer()
+    setPlayer(dailyPlayer)
+
+    // Check if dismissed for today
+    const today = new Date().toLocaleDateString('en-US')
+    const dismissedKey = `spotlight-dismissed-${today}-${dailyPlayer.id}`
+    if (localStorage.getItem(dismissedKey)) {
+      setIsVisible(false)
+    }
   }, [])
 
-  if (!player) return null
+  const handleDismiss = () => {
+    if (!player) return
+    setIsVisible(false)
+    const today = new Date().toLocaleDateString('en-US')
+    const dismissedKey = `spotlight-dismissed-${today}-${player.id}`
+    localStorage.setItem(dismissedKey, 'true')
+  }
+
+  if (!player || !isVisible) return null
 
   return (
-    <div className="w-full bg-muted/30 rounded-lg border p-4 sm:p-6 mb-8">
+    <div className="w-full bg-muted/30 rounded-lg border p-4 sm:p-6 mb-8 relative group/card">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-2 top-2 h-8 w-8 rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity"
+        onClick={handleDismiss}
+        aria-label="Dismiss Player of the Day"
+      >
+        <X className="h-4 w-4" />
+      </Button>
       <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
         <Link href={`/players/${player.id}`} className="shrink-0 group relative overflow-hidden rounded-xl">
           {!imageError ? (
@@ -37,7 +65,7 @@ export function PlayerSpotlight() {
             </div>
           )}
         </Link>
-        <div className="space-y-2 flex-1">
+        <div className="space-y-2 flex-1 pr-8">
           <div className="flex items-center gap-2 mb-1">
             <Star className="h-4 w-4 text-primary fill-primary" />
             <h2 className="text-sm font-medium text-primary uppercase tracking-wider">Player of the Day</h2>
