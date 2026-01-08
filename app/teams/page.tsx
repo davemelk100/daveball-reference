@@ -41,24 +41,19 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
             />
             {divisionName}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {divTeams
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((team) => (
-                <a key={team.id} href={`/teams/${team.id}`} className="block">
-                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-[#b7b7b7] transition-colors">
+                <a key={team.id} href={`/teams/${team.id}`} className="block h-full">
+                  <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border bg-card hover:bg-[#b7b7b7] transition-colors h-full min-h-[100px]">
                     <img
                       src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
                       alt={team.name}
                       className="h-10 w-10 object-contain"
                       loading="lazy"
                     />
-                    <div>
-                      <p className="font-medium">{team.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {team.abbreviation}
-                      </p>
-                    </div>
+                    <p className="font-medium text-center">{team.name}</p>
                   </div>
                 </a>
               ))}
@@ -75,7 +70,7 @@ function TeamsGridSkeleton() {
       {[1, 2, 3].map((i) => (
         <section key={i}>
           <Skeleton className="h-6 w-48 mb-4" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[1, 2, 3, 4, 5].map((j) => (
               <Skeleton key={j} className="h-16 w-full" />
             ))}
