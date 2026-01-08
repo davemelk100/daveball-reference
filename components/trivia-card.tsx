@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getDailyTriviaQuestions, getNextTriviaTime, getTodayStorageKey, type TriviaQuestion } from "@/lib/trivia-data"
-import { HelpCircle, CheckCircle2, XCircle, Clock, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { HelpCircle, CheckCircle2, XCircle, Clock, ChevronLeft, ChevronRight, Share2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface AnsweredQuestion {
@@ -85,6 +86,30 @@ export function TriviaCard() {
   const goToNext = () => {
     if (currentIndex < 4) {
       setCurrentIndex(currentIndex + 1)
+    }
+  }
+
+  const handleShare = async () => {
+    const score = answeredQuestions.filter(a => a.isCorrect).length
+    const date = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
+    const text = `I got ${score}/5 on today's (${date}) Major League Numbers trivia! ⚾\n\nPlay here: https://daveball-reference.vercel.app`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Major League Numbers Trivia',
+          text: text,
+        })
+      } catch (err) {
+        console.error('Error sharing:', err)
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text)
+        toast("Results copied to clipboard!")
+      } catch (err) {
+        console.error('Error copying to clipboard:', err)
+      }
     }
   }
 
@@ -213,11 +238,11 @@ export function TriviaCard() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setIsOpen(false)}
-                className="gap-1 text-green-500 hover:text-green-400 hover:bg-green-500/10"
+                onClick={handleShare}
+                className="gap-1 text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
               >
-                Done
-                <X className="h-4 w-4" />
+                Share
+                <Share2 className="h-4 w-4" />
               </Button>
             ) : (
               <div className="w-[72px]" />

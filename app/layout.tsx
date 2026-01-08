@@ -7,6 +7,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageLoader } from "@/components/page-loader";
 import { WebsiteJsonLd } from "@/components/json-ld";
+import { Toaster } from "@/components/ui/sonner"
 import "@/styles/globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -103,6 +104,7 @@ export default function RootLayout({
         <Header />
         <Suspense fallback={<PageLoader />}>{children}</Suspense>
         <Footer />
+        <Toaster />
         <Analytics />
       </body>
     </html>
