@@ -8,7 +8,7 @@ import { getPlayerHeadshotUrl } from "@/lib/mlb-api"
 import Image from "next/image"
 import Link from "next/link"
 
-import { X } from "lucide-react"
+
 
 export function PlayerSpotlight() {
   const [player, setPlayer] = useState<SpotlightPlayer | null>(null)
