@@ -1,46 +1,54 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search } from "lucide-react"
-import { getPlayerHeadshotUrl, type HallOfFamer } from "@/lib/mlb-api"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
+import { getPlayerHeadshotUrl, type HallOfFamer } from "@/lib/mlb-api";
 
 interface HofPageContentProps {
-  hofMembers: HallOfFamer[]
+  hofMembers: HallOfFamer[];
 }
 
 export function HofPageContent({ hofMembers }: HofPageContentProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedYear, setSelectedYear] = useState<string>("all")
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedYear, setSelectedYear] = useState<string>("all");
 
   // Get unique years for the dropdown
-  const years = [...new Set(hofMembers.map((m) => m.inductionYear))].sort((a, b) => b - a)
+  const years = [...new Set(hofMembers.map((m) => m.inductionYear))].sort(
+    (a, b) => b - a
+  );
 
   // Filter members based on search and year
   const filteredMembers = hofMembers.filter((member) => {
-    const matchesSearch = member.playerName.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesYear = selectedYear === "all" || member.inductionYear === Number(selectedYear)
-    return matchesSearch && matchesYear
-  })
+    const matchesSearch = member.playerName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesYear =
+      selectedYear === "all" || member.inductionYear === Number(selectedYear);
+    return matchesSearch && matchesYear;
+  });
 
   // Group by year
-  const groupedByYear = filteredMembers.reduce(
-    (acc, member) => {
-      const year = member.inductionYear
-      if (!acc[year]) acc[year] = []
-      acc[year].push(member)
-      return acc
-    },
-    {} as Record<number, HallOfFamer[]>
-  )
+  const groupedByYear = filteredMembers.reduce((acc, member) => {
+    const year = member.inductionYear;
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(member);
+    return acc;
+  }, {} as Record<number, HallOfFamer[]>);
 
   const sortedYears = Object.keys(groupedByYear)
     .map(Number)
-    .sort((a, b) => b - a)
+    .sort((a, b) => b - a);
 
   return (
     <main className="container py-8">
@@ -50,14 +58,11 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
           alt="MLN Logo"
           width={120}
           height={120}
-          className="h-16 md:h-24 w-auto object-contain"
+          className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
           priority
         />
         <div className="flex flex-col">
           <h1 className="mb-0">Hall of Fame</h1>
-          <p className="text-muted-foreground text-lg">
-            The simplest way to search MLB history.
-          </p>
         </div>
       </div>
 
@@ -68,7 +73,9 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
             <div className="p-0 flex justify-start">
               <SelectTrigger className="w-auto border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl md:text-3xl font-semibold text-[#4e6095]">Induction Year</span>
+                  <span className="text-2xl md:text-3xl font-semibold text-[#4e6095]">
+                    Induction Year
+                  </span>
                   <span className="text-2xl md:text-3xl font-bold border-b-2 border-foreground">
                     <SelectValue placeholder="All Years" />
                   </span>
@@ -112,22 +119,32 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
               <h2 className="text-xl font-semibold mb-4">{year}</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {groupedByYear[year].map((member) => (
-                  <Link key={`${member.playerId}-${year}`} href={`/players/${member.playerId}`}>
+                  <Link
+                    key={`${member.playerId}-${year}`}
+                    href={`/players/${member.playerId}`}
+                  >
                     <Card className="hover:bg-secondary/50 transition-colors cursor-pointer h-full">
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                           <Image
-                            src={getPlayerHeadshotUrl(member.playerId, "small") || "/placeholder.svg"}
+                            src={
+                              getPlayerHeadshotUrl(member.playerId, "small") ||
+                              "/placeholder.svg"
+                            }
                             alt={member.playerName}
                             width={75}
                             height={75}
-                            style={{ width: 'auto', height: '75px' }}
+                            style={{ width: "auto", height: "75px" }}
                             className="rounded-lg shrink-0"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium truncate">{member.playerName}</p>
+                            <p className="font-medium truncate">
+                              {member.playerName}
+                            </p>
                             {member.position && (
-                              <p className="text-sm text-muted-foreground">{member.position}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {member.position}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -141,5 +158,5 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
         </div>
       )}
     </main>
-  )
+  );
 }

@@ -100,14 +100,11 @@ export function PlayersPageContent({
           alt="MLN Logo"
           width={120}
           height={120}
-          className="h-16 md:h-24 w-auto object-contain"
+          className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
           priority
         />
         <div className="flex flex-col">
           <h1 className="mb-0">Players</h1>
-          <p className="text-muted-foreground text-lg">
-            The simplest way to search MLB history.
-          </p>
         </div>
       </div>
 
@@ -142,62 +139,56 @@ export function PlayersPageContent({
             {isFetchingAll ? "Loading..." : "See All Players"}
           </Button>
         ) : (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowAll(false)}
-          >
+          <Button variant="ghost" size="sm" onClick={() => setShowAll(false)}>
             Show Featured Only
           </Button>
         )}
       </div>
-      {
-        isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-secondary" />
-                    <div className="flex-1">
-                      <div className="h-4 w-24 bg-secondary rounded mb-2" />
-                      <div className="h-3 w-32 bg-secondary rounded" />
-                    </div>
+      {isLoading ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-secondary" />
+                  <div className="flex-1">
+                    <div className="h-4 w-24 bg-secondary rounded mb-2" />
+                    <div className="h-3 w-32 bg-secondary rounded" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {currentList.map((player) => (
+              <PlayerCard key={player.id} player={player} />
             ))}
           </div>
-        ) : (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {currentList.map((player) => (
-                <PlayerCard key={player.id} player={player} />
-              ))}
+
+          {hasMore && (
+            <div className="mt-8 flex justify-center">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={loadMore}
+                className="gap-2"
+              >
+                Load More Players
+                <ChevronDown className="h-4 w-4" />
+              </Button>
             </div>
+          )}
 
-            {hasMore && (
-              <div className="mt-8 flex justify-center">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={loadMore}
-                  className="gap-2"
-                >
-                  Load More Players
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-
-            {showAll && !hasMore && allPlayers.length > 0 && (
-              <p className="mt-8 text-center text-muted-foreground text-sm">
-                Showing all {allPlayers.length} players for {season}
-              </p>
-            )}
-          </>
-        )
-      }
-    </main >
+          {showAll && !hasMore && allPlayers.length > 0 && (
+            <p className="mt-8 text-center text-muted-foreground text-sm">
+              Showing all {allPlayers.length} players for {season}
+            </p>
+          )}
+        </>
+      )}
+    </main>
   );
 }

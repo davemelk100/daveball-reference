@@ -70,14 +70,11 @@ export function StandingsPageContent({
             alt="MLN Logo"
             width={120}
             height={120}
-            className="h-16 md:h-24 w-auto object-contain"
+            className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
             priority
           />
           <div className="flex flex-col">
             <h1 className="mb-0">MLB Standings</h1>
-            <p className="text-muted-foreground text-lg">
-              The simplest way to search MLB history.
-            </p>
           </div>
         </div>
         <div className="flex justify-start">

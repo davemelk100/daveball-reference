@@ -1,95 +1,110 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import dynamic from "next/dynamic"
-import { ArrowLeft, Loader2, AlertCircle } from "lucide-react"
-import { getTeamLogoUrl, getDefaultSeason } from "@/lib/mlb-api"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SeasonSelector } from "@/components/season-selector"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { getTeamLogoUrl, getDefaultSeason } from "@/lib/mlb-api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SeasonSelector } from "@/components/season-selector";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const RosterTable = dynamic(() => import("@/components/roster-table").then((mod) => ({ default: mod.RosterTable })), {
-  loading: () => <Skeleton className="h-64 w-full" />,
-  ssr: false,
-})
+const RosterTable = dynamic(
+  () =>
+    import("@/components/roster-table").then((mod) => ({
+      default: mod.RosterTable,
+    })),
+  {
+    loading: () => <Skeleton className="h-64 w-full" />,
+    ssr: false,
+  }
+);
 
 const HistoricalChart = dynamic(
-  () => import("@/components/historical-chart").then((mod) => ({ default: mod.HistoricalChart })),
+  () =>
+    import("@/components/historical-chart").then((mod) => ({
+      default: mod.HistoricalChart,
+    })),
   {
     loading: () => <Skeleton className="h-80 w-full" />,
     ssr: false,
-  },
-)
+  }
+);
 
 const HistoricalTable = dynamic(
-  () => import("@/components/historical-table").then((mod) => ({ default: mod.HistoricalTable })),
+  () =>
+    import("@/components/historical-table").then((mod) => ({
+      default: mod.HistoricalTable,
+    })),
   {
     loading: () => <Skeleton className="h-96 w-full" />,
     ssr: false,
-  },
-)
+  }
+);
 
 const TeamLogos = dynamic(
-  () => import("@/components/team-logos").then((mod) => ({ default: mod.TeamLogos })),
+  () =>
+    import("@/components/team-logos").then((mod) => ({
+      default: mod.TeamLogos,
+    })),
   {
     loading: () => <Skeleton className="h-48 w-full" />,
-  },
-)
+  }
+);
 
 interface TeamPageContentProps {
-  teamId: number
+  teamId: number;
   initialData: {
-    team: any
-    roster: any[]
-    teamRecord: any
-    history: any[]
-  }
+    team: any;
+    roster: any[];
+    teamRecord: any;
+    history: any[];
+  };
 }
 
 export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
-  const defaultSeason = getDefaultSeason()
-  const [season, setSeason] = useState(defaultSeason)
-  const [team, setTeam] = useState(initialData?.team || null)
-  const [roster, setRoster] = useState(initialData?.roster || [])
-  const [teamRecord, setTeamRecord] = useState(initialData?.teamRecord || null)
-  const [history] = useState(initialData?.history || [])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const defaultSeason = getDefaultSeason();
+  const [season, setSeason] = useState(defaultSeason);
+  const [team, setTeam] = useState(initialData?.team || null);
+  const [roster, setRoster] = useState(initialData?.roster || []);
+  const [teamRecord, setTeamRecord] = useState(initialData?.teamRecord || null);
+  const [history] = useState(initialData?.history || []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (season === defaultSeason) {
-      setTeam(initialData?.team || null)
-      setRoster(initialData?.roster || [])
-      setTeamRecord(initialData?.teamRecord || null)
-      setError(null)
-      return
+      setTeam(initialData?.team || null);
+      setRoster(initialData?.roster || []);
+      setTeamRecord(initialData?.teamRecord || null);
+      setError(null);
+      return;
     }
 
     const fetchData = async () => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       try {
-        const res = await fetch(`/api/team/${teamId}?season=${season}`)
+        const res = await fetch(`/api/team/${teamId}?season=${season}`);
         if (!res.ok) {
-          throw new Error(`Failed to fetch: ${res.status}`)
+          throw new Error(`Failed to fetch: ${res.status}`);
         }
-        const data = await res.json()
-        setTeam(data.team || null)
-        setRoster(data.roster || [])
-        setTeamRecord(data.teamRecord || null)
+        const data = await res.json();
+        setTeam(data.team || null);
+        setRoster(data.roster || []);
+        setTeamRecord(data.teamRecord || null);
       } catch (err) {
-        console.error("Error fetching team data:", err)
-        setError("Failed to load team data. Please try again.")
+        console.error("Error fetching team data:", err);
+        setError("Failed to load team data. Please try again.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [season, teamId, defaultSeason, initialData])
+    fetchData();
+  }, [season, teamId, defaultSeason, initialData]);
 
   if (!team) {
     return (
@@ -105,19 +120,26 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           <CardContent className="py-12 flex flex-col items-center gap-4">
             <AlertCircle className="h-12 w-12 text-muted-foreground" />
             <p className="text-muted-foreground text-center">
-              {error || "Unable to load team data. The API may be temporarily unavailable."}
+              {error ||
+                "Unable to load team data. The API may be temporarily unavailable."}
             </p>
           </CardContent>
         </Card>
       </main>
-    )
+    );
   }
 
-  const pitchers = roster.filter((p) => p.primaryPosition?.type === "Pitcher")
-  const catchers = roster.filter((p) => p.primaryPosition?.abbreviation === "C")
-  const infielders = roster.filter((p) => ["1B", "2B", "3B", "SS"].includes(p.primaryPosition?.abbreviation || ""))
-  const outfielders = roster.filter((p) => ["LF", "CF", "RF", "OF"].includes(p.primaryPosition?.abbreviation || ""))
-  const dh = roster.filter((p) => p.primaryPosition?.abbreviation === "DH")
+  const pitchers = roster.filter((p) => p.primaryPosition?.type === "Pitcher");
+  const catchers = roster.filter(
+    (p) => p.primaryPosition?.abbreviation === "C"
+  );
+  const infielders = roster.filter((p) =>
+    ["1B", "2B", "3B", "SS"].includes(p.primaryPosition?.abbreviation || "")
+  );
+  const outfielders = roster.filter((p) =>
+    ["LF", "CF", "RF", "OF"].includes(p.primaryPosition?.abbreviation || "")
+  );
+  const dh = roster.filter((p) => p.primaryPosition?.abbreviation === "DH");
 
   return (
     <main className="container py-8">
@@ -154,26 +176,27 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
               alt="MLN Logo"
               width={120}
               height={120}
-              className="h-16 md:h-24 w-auto object-contain"
+              className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
               priority
             />
             <div className="flex flex-col">
               <h1 className="mb-0">{team.name}</h1>
-              <p className="text-muted-foreground text-lg">
-                The simplest way to search MLB history.
-              </p>
             </div>
           </div>
           <p className="text-muted-foreground mt-1">
             {team.league?.name} &middot; {team.division?.name}
           </p>
-          <p className="text-sm text-muted-foreground mt-1">{team.locationName}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {team.locationName}
+          </p>
         </div>
       </div>
 
       <div className="mb-8 flex items-center justify-start gap-2">
         <SeasonSelector season={season} onSeasonChange={setSeason} />
-        {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+        {loading && (
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        )}
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -181,7 +204,9 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
           <>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Record</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Record
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold">
@@ -191,27 +216,43 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Win %</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Win %
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{teamRecord.winningPercentage}</p>
+                <p className="text-2xl font-bold">
+                  {teamRecord.winningPercentage}
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Games Back</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Games Back
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{teamRecord.gamesBack || "-"}</p>
+                <p className="text-2xl font-bold">
+                  {teamRecord.gamesBack || "-"}
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Run Diff</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Run Diff
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p
-                  className={`text-2xl font-bold ${teamRecord.runDifferential > 0 ? "text-green-500" : teamRecord.runDifferential < 0 ? "text-red-500" : ""}`}
+                  className={`text-2xl font-bold ${
+                    teamRecord.runDifferential > 0
+                      ? "text-green-500"
+                      : teamRecord.runDifferential < 0
+                      ? "text-red-500"
+                      : ""
+                  }`}
                 >
                   {teamRecord.runDifferential > 0 ? "+" : ""}
                   {teamRecord.runDifferential}
@@ -230,7 +271,9 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
 
       <Tabs defaultValue="history" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="history">Historical Data (1960-Present)</TabsTrigger>
+          <TabsTrigger value="history">
+            Historical Data (1960-Present)
+          </TabsTrigger>
           <TabsTrigger value="roster">{season} Roster</TabsTrigger>
           <TabsTrigger value="logos">Logos</TabsTrigger>
         </TabsList>
@@ -259,7 +302,9 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
                 <RosterTable players={catchers} title="Catchers" />
                 <RosterTable players={infielders} title="Infielders" />
                 <RosterTable players={outfielders} title="Outfielders" />
-                {dh.length > 0 && <RosterTable players={dh} title="Designated Hitters" />}
+                {dh.length > 0 && (
+                  <RosterTable players={dh} title="Designated Hitters" />
+                )}
               </div>
             </div>
           ) : (
@@ -276,5 +321,5 @@ export function TeamPageContent({ teamId, initialData }: TeamPageContentProps) {
         </TabsContent>
       </Tabs>
     </main>
-  )
+  );
 }

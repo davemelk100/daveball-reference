@@ -152,7 +152,7 @@ export function DashboardContent({
           alt="MLN Logo"
           width={120}
           height={120}
-          className="h-16 md:h-24 w-auto object-contain hidden md:flex"
+          className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
           priority
         />
         <div className="flex flex-col">

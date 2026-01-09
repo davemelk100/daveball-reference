@@ -31,14 +31,16 @@ function TeamGrid({ divisions }: { divisions: [string, Team[]][] }) {
     <div className="space-y-10">
       {divisions.map(([divisionName, divTeams]) => (
         <section key={divisionName}>
-          <h2 className="text-xl font-semibold mb-4">
-            {divisionName}
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">{divisionName}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {divTeams
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((team) => (
-                <a key={team.id} href={`/teams/${team.id}`} className="block h-full">
+                <a
+                  key={team.id}
+                  href={`/teams/${team.id}`}
+                  className="block h-full"
+                >
                   <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg border bg-card hover:bg-[#b7b7b7] transition-colors h-full min-h-[100px]">
                     <img
                       src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
@@ -109,14 +111,11 @@ export default function TeamsPage() {
           alt="MLN Logo"
           width={120}
           height={120}
-          className="h-16 md:h-24 w-auto object-contain"
+          className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
           priority
         />
         <div className="flex flex-col">
           <h1 className="mb-0">MLB Teams</h1>
-          <p className="text-muted-foreground text-lg">
-            The simplest way to search MLB history.
-          </p>
         </div>
       </div>
 
