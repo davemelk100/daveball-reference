@@ -210,7 +210,7 @@ function TriviaCardContent() {
           {(currentAnswered || showYesterday) && (
             <div
               className={cn(
-                "p-2 rounded-lg text-xs",
+                "p-2 rounded-lg text-sm",
                 (currentAnswered?.isCorrect || showYesterday) ? "bg-green-500/10 text-green-400" : "bg-muted",
               )}
             >
@@ -445,21 +445,16 @@ function TriviaPanelContent() {
       </div>
 
       {(currentAnswered || showYesterday) && (
-        <div
-          className={cn(
-            "p-2 rounded-lg text-xs",
-            (currentAnswered?.isCorrect || showYesterday) ? "bg-green-500/10 text-green-400" : "bg-muted",
-          )}
-        >
+        <div className="p-2 rounded-lg text-sm bg-white">
           {!showYesterday && (
             currentAnswered?.isCorrect ? (
-              <p className="font-medium">Correct!</p>
+              <p className="font-medium text-sm text-green-500">Correct!</p>
             ) : (
-              <p className="font-medium text-red-400">Not quite!</p>
+              <p className="font-medium text-red-400 text-sm">Not quite!</p>
             )
           )}
-          {showYesterday && <p className="font-medium text-green-400">Correct Answer:</p>}
-          <p className="mt-1 text-muted-foreground">{currentQuestion.explanation}</p>
+          {showYesterday && <p className="font-medium text-green-500 text-sm">Correct Answer:</p>}
+          <p className="mt-1 text-muted-foreground text-sm">{currentQuestion.explanation}</p>
         </div>
       )}
 
