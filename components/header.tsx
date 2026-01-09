@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { HeaderSearch } from "@/components/header-search";
 
 const navigation = [
-  { name: "Dashboard", href: "/" },
+  { name: "Home", href: "/" },
   { name: "Players", href: "/players" },
   { name: "Teams", href: "/teams" },
   { name: "Standings", href: "/standings" },
@@ -26,7 +26,7 @@ export function Header() {
   return (
     <header className="z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-[80px] lg:h-[116px] items-center gap-4">
-        <Link href="/" className="flex-shrink-0 border-0">
+        <Link href="/" className="flex-shrink-0 border-0 flex items-center gap-3">
           <Image
             src="/mln-header.png"
             alt="Major League Numbers Logo"
@@ -34,6 +34,9 @@ export function Header() {
             height={100}
             className="w-[65px] h-auto object-contain border-0"
           />
+          <p className="hidden lg:block text-sm text-muted-foreground whitespace-nowrap">
+            The simplest way to search MLB history.
+          </p>
         </Link>
 
         <div className="flex-1 flex justify-center">

@@ -66,7 +66,7 @@ export function StandingsPageContent({
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Image
-            src="/mln-logo.png"
+            src="/mln-no-text.svg"
             alt="MLN Logo"
             width={120}
             height={120}

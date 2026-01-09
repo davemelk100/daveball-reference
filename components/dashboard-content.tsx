@@ -148,7 +148,7 @@ export function DashboardContent({
       {/* Hero Section */}
       <div className="mb-8 flex items-center gap-4">
         <Image
-          src="/mln-logo.png"
+          src="/mln-no-text.svg"
           alt="MLN Logo"
           width={120}
           height={120}
@@ -156,10 +156,7 @@ export function DashboardContent({
           priority
         />
         <div className="flex flex-col">
-          <h1 className="mb-0">Major League Numbers</h1>
-          <p className="text-muted-foreground text-lg">
-            The simplest way to search MLB history.
-          </p>
+          <h1 className="mb-0">Home</h1>
         </div>
       </div>
 

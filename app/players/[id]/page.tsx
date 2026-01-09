@@ -128,28 +128,16 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
             />
           </div>
           <div className="flex-1">
-            <div className="mb-4 flex items-center gap-4">
-              <Image
-                src="/mln-logo.png"
-                alt="MLN Logo"
-                width={120}
-                height={120}
-                className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
-                priority
-              />
-              <div className="flex flex-col">
-                <div className="flex items-center gap-3">
-                  <h1 className="mb-0 leading-tight">{player.fullName}</h1>
-                  {player.active && (
-                    <Badge
-                      variant="outline"
-                      className="border-green-500/50 text-green-500"
-                    >
-                      Active
-                    </Badge>
-                  )}
-                </div>
-              </div>
+            <div className="mb-4 flex items-center gap-3">
+              <h1 className="mb-0 leading-tight">{player.fullName}</h1>
+              {player.active && (
+                <Badge
+                  variant="outline"
+                  className="border-green-500/50 text-green-500"
+                >
+                  Active
+                </Badge>
+              )}
             </div>
             <p className="text-lg text-muted-foreground mb-4">
               {player.currentTeam?.name || "Free Agent"} •{" "}

@@ -84,7 +84,7 @@ export function AllStarPageContent({
     <main className="container py-8">
       <div className="mb-8 flex items-center gap-4">
         <Image
-          src="/mln-logo.png"
+          src="/mln-no-text.svg"
           alt="MLN Logo"
           width={120}
           height={120}
