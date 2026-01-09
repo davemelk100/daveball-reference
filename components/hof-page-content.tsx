@@ -52,15 +52,7 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
 
   return (
     <main className="container py-8">
-      <div className="mb-8 flex items-center gap-4">
-        <Image
-          src="/mln-no-text.svg"
-          alt="MLN Logo"
-          width={120}
-          height={120}
-          className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
-          priority
-        />
+      <div className="mb-0 flex items-center gap-4">
         <div className="flex flex-col">
           <h1 className="mb-0">Hall of Fame</h1>
         </div>
@@ -73,10 +65,10 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
             <div className="p-0 flex justify-start">
               <SelectTrigger className="w-auto border-0 shadow-none p-0 h-auto bg-transparent hover:bg-transparent focus:ring-0 focus-visible:ring-0">
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl md:text-3xl font-semibold text-[#4e6095]">
+                  <span className="font-league text-2xl md:text-3xl font-semibold text-[#4e6095]">
                     Induction Year
                   </span>
-                  <span className="text-2xl md:text-3xl font-bold border-b-2 border-foreground">
+                  <span className="font-league text-2xl md:text-3xl font-bold border-b-2 border-foreground">
                     <SelectValue placeholder="All Years" />
                   </span>
                 </div>

@@ -64,15 +64,7 @@ export function StandingsPageContent({
   return (
     <main className="container py-8">
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Image
-            src="/mln-no-text.svg"
-            alt="MLN Logo"
-            width={120}
-            height={120}
-            className="h-16 md:h-24 w-auto object-contain hidden md:flex hidden md:flex"
-            priority
-          />
+        <div className="flex items-center gap-4 mb-1">
           <div className="flex flex-col">
             <h1 className="mb-0">MLB Standings</h1>
           </div>

@@ -28,15 +28,12 @@ export function Header() {
       <div className="container flex h-[80px] lg:h-[116px] items-center gap-4">
         <Link href="/" className="flex-shrink-0 border-0 flex items-center gap-3">
           <Image
-            src="/mln-header.png"
+            src="/mln-logo.svg"
             alt="Major League Numbers Logo"
-            width={161}
+            width={120}
             height={100}
-            className="w-[65px] h-auto object-contain border-0"
+            className="h-auto object-contain border-0"
           />
-          <p className="hidden lg:block text-sm text-muted-foreground whitespace-nowrap">
-            The simplest way to search MLB history.
-          </p>
         </Link>
 
         <div className="flex-1 flex justify-center">
