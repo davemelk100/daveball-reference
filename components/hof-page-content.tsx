@@ -124,25 +124,27 @@ export function HofPageContent({ hofMembers }: HofPageContentProps) {
                     href={`/players/${member.playerId}`}
                   >
                     <Card className="hover:bg-secondary/50 transition-colors cursor-pointer h-full">
-                      <CardContent className="p-4">
+                      <CardContent className="p-2 pl-4">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={
-                              getPlayerHeadshotUrl(member.playerId, "small") ||
-                              "/placeholder.svg"
-                            }
-                            alt={member.playerName}
-                            width={75}
-                            height={75}
-                            style={{ width: "auto", height: "75px" }}
-                            className="rounded-lg shrink-0"
-                          />
+                          <div className="shrink-0">
+                            <Image
+                              src={
+                                getPlayerHeadshotUrl(member.playerId, "small") ||
+                                "/placeholder.svg"
+                              }
+                              alt={member.playerName}
+                              width={96}
+                              height={96}
+                              style={{ width: "auto", height: "96px" }}
+                              className="rounded-lg"
+                            />
+                          </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium truncate">
+                            <h3 className="font-semibold truncate">
                               {member.playerName}
-                            </p>
+                            </h3>
                             {member.position && (
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-sm text-muted-foreground truncate">
                                 {member.position}
                               </p>
                             )}

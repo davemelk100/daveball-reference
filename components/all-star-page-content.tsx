@@ -39,27 +39,30 @@ export function AllStarPageContent({
             href={`/players/${player.playerId}`}
           >
             <Card className="hover:bg-secondary/50 transition-colors cursor-pointer h-full">
-              <CardContent className="p-4">
+              <CardContent className="p-2 pl-4">
                 <div className="flex items-center gap-3">
-                  <Image
-                    src={
-                      getPlayerHeadshotUrl(player.playerId, "small") ||
-                      "/placeholder.svg"
-                    }
-                    alt={player.playerName}
-                    width={60}
-                    height={60}
-                    className="h-[60px] w-auto rounded-lg shrink-0"
-                  />
+                  <div className="shrink-0">
+                    <Image
+                      src={
+                        getPlayerHeadshotUrl(player.playerId, "small") ||
+                        "/placeholder.svg"
+                      }
+                      alt={player.playerName}
+                      width={96}
+                      height={96}
+                      style={{ width: 'auto', height: '96px' }}
+                      className="rounded-lg"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{player.playerName}</p>
+                    <h3 className="font-semibold truncate">{player.playerName}</h3>
                     {player.team && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground truncate">
                         {player.team.name}
                       </p>
                     )}
                     {player.notes && (
-                      <p className="text-xs text-muted-foreground italic mt-1">
+                      <p className="text-xs text-muted-foreground italic mt-1 truncate">
                         {player.notes}
                       </p>
                     )}
